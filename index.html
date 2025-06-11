@@ -28,10 +28,6 @@
             font-size: 16px;
             border-radius: 5px;
         }
-        input {
-            width: 80%;
-            border: 1px solid #ddd;
-        }
         button {
             cursor: pointer;
             background: #007bff;
@@ -59,10 +55,6 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-        .custom-autofill input {
-            width: auto;
-            margin: 5px;
-        }
         .price-section {
             margin-top: 20px;
         }
@@ -72,21 +64,22 @@
     <div class="container">
         <h2>BoroBurgers Order Management</h2>
         <input type="text" id="orderInput" placeholder="Enter order details">
-        <input type="number" id="orderPrice" placeholder="Set price (£)">
         <button onclick="addOrder()">Add Order</button>
 
         <div class="autofill-buttons">
             <h4>Quick Fill Options:</h4>
-            <button onclick="autofill('The Classic')">The Classic</button>
-            <button onclick="autofill('The Serbian Burger')">The Serbian Burger</button>
-            <button onclick="autofill('The BigMak')">The BigMak</button>
-            <button onclick="addMeal()">Meal + 🍟🥤</button>
+            <button onclick="autofill('The Classic', 5.99)">The Classic (£5.99)</button>
+            <button onclick="autofill('The Serbian Burger', 6.49)">The Serbian Burger (£6.99)</button>
+            <button onclick="autofill('The BigMak', 7.99)">The BigMak (£8.99)</button>
+            <button onclick="addMeal()">Add Meal 🍟🥤 (£2.76)</button>
         </div>
 
         <div class="custom-autofill">
-            <h4>Customize Your Own Autofill</h4>
-            <input type="text" id="customOrder" placeholder="Enter preset order">
-            <button onclick="addCustomAutofill()">Add Custom Button</button>
+            <h4>Custom Buttons (No Price)</h4>
+            <button onclick="autofillCustom('Custom Item 1')">Custom 1</button>
+            <button onclick="autofillCustom('Custom Item 2')">Custom 2</button>
+            <button onclick="autofillCustom('Custom Item 3')">Custom 3</button>
+            <button onclick="autofillCustom('Custom Item 4')">Custom 4</button>
         </div>
 
         <ul id="orderList"></ul>
@@ -102,48 +95,37 @@
         let orderCounter = localStorage.getItem('orderCounter') || 1;
         let totalPrice = 0;
 
-        function autofill(order) {
-            document.getElementById('orderInput').value = order;
+        function autofill(item, price) {
+            document.getElementById('orderInput').value = item;
+            document.getElementById('orderInput').setAttribute("data-price", price);
+        }
+
+        function autofillCustom(item) {
+            document.getElementById('orderInput').value = item;
+            document.getElementById('orderInput').removeAttribute("data-price");
         }
 
         function addMeal() {
             let input = document.getElementById('orderInput');
             if (input.value.trim() !== '') {
                 input.value += " + Meal 🍟🥤";
+                input.setAttribute("data-price", (parseFloat(input.getAttribute("data-price")) || 0) + 2.99);
             } else {
                 alert("Enter an order first before adding a meal!");
             }
         }
 
-        function addCustomAutofill() {
-            let customOrder = document.getElementById('customOrder').value;
-            if (customOrder.trim() === '') {
-                alert("Custom order cannot be empty!");
-                return;
-            }
-
-            let button = document.createElement("button");
-            button.innerText = customOrder;
-            button.style.background = "#ffc107";
-            button.onclick = function() { autofill(customOrder); };
-
-            document.querySelector(".autofill-buttons").appendChild(button);
-            document.getElementById('customOrder').value = '';
-            
-            let customOrders = JSON.parse(localStorage.getItem('customOrders')) || [];
-            customOrders.push(customOrder);
-            localStorage.setItem('customOrders', JSON.stringify(customOrders));
-        }
-
         async function addOrder() {
             let orderInput = document.getElementById('orderInput');
-            let priceInput = document.getElementById('orderPrice');
-            if (orderInput.value.trim() === '' || priceInput.value.trim() === '') {
-                alert("Order and price cannot be empty!");
+            let price = parseFloat(orderInput.getAttribute("data-price")) || 0;
+            
+            if (orderInput.value.trim() === '') {
+                alert("Order cannot be empty!");
                 return;
             }
 
-            let order = { id: orderCounter++, item: orderInput.value, price: parseFloat(priceInput.value) };
+            let order = { id: orderCounter++, item: orderInput.value, price };
+
             localStorage.setItem('orderCounter', orderCounter);
 
             try {
@@ -161,7 +143,7 @@
                 document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
                 alert(`Order #${order.id} added successfully!`);
                 orderInput.value = '';
-                priceInput.value = '';
+                orderInput.removeAttribute("data-price");
                 fetchOrders();
             } catch (error) {
                 alert(error.message);
@@ -192,24 +174,11 @@
             alert("Referral code applied! 10% discount added.");
         }
 
-        function loadCustomButtons() {
-            let customOrders = JSON.parse(localStorage.getItem('customOrders')) || [];
-            customOrders.forEach(order => {
-                let button = document.createElement("button");
-                button.innerText = order;
-                button.style.background = "#ffc107";
-                button.onclick = function() { autofill(order); };
-                document.querySelector(".autofill-buttons").appendChild(button);
-            });
-        }
-
-        window.onload = function () {
-            fetchOrders();
-            loadCustomButtons();
-        };
+        window.onload = fetchOrders;
     </script>
 </body>
 </html>
+
 
 
 
