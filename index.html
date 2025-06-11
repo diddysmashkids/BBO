@@ -5,11 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BoroBurgers Orders</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
-        .container { max-width: 600px; margin: auto; }
-        input, button { margin: 5px; padding: 8px; }
-        ul { list-style-type: none; padding: 0; }
-        li { background: #f4f4f4; margin: 5px 0; padding: 10px; display: flex; justify-content: space-between; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            margin: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h2 {
+            color: #007bff;
+        }
+        input, button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        input {
+            width: 80%;
+            border: 1px solid #ddd;
+        }
+        button {
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .autofill-buttons button {
+            background: #28a745;
+            margin: 5px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #f4f4f4;
+            margin: 5px 0;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 5px;
+        }
+        .custom-autofill {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .custom-autofill input {
+            width: auto;
+            margin: 5px;
+        }
     </style>
 </head>
 <body>
@@ -17,11 +70,46 @@
         <h2>BoroBurgers Order Management</h2>
         <input type="text" id="orderInput" placeholder="Enter order details">
         <button onclick="addOrder()">Add Order</button>
+
+        <div class="autofill-buttons">
+            <h4>Quick Fill Options:</h4>
+            <button onclick="autofill('Cheeseburger')">Cheeseburger 🍔</button>
+            <button onclick="autofill('Fries')">Fries 🍟</button>
+            <button onclick="autofill('Milkshake')">Milkshake 🥤</button>
+            <button onclick="autofill('Chicken Nuggets')">Chicken Nuggets 🍗</button>
+        </div>
+
+        <div class="custom-autofill">
+            <h4>Customize Your Own Autofill</h4>
+            <input type="text" id="customOrder" placeholder="Enter preset order">
+            <button onclick="addCustomAutofill()">Add Custom Button</button>
+        </div>
+
         <ul id="orderList"></ul>
     </div>
 
     <script>
         const backendURL = "https://boroburgersorders.onrender.com"; // Your Render backend URL
+
+        function autofill(order) {
+            document.getElementById('orderInput').value = order;
+        }
+
+        function addCustomAutofill() {
+            let customOrder = document.getElementById('customOrder').value;
+            if (customOrder.trim() === '') {
+                alert("Custom order cannot be empty!");
+                return;
+            }
+
+            let button = document.createElement("button");
+            button.innerText = customOrder;
+            button.style.background = "#ffc107"; // Yellow button for custom autofill
+            button.onclick = function() { autofill(customOrder); };
+
+            document.querySelector(".autofill-buttons").appendChild(button);
+            document.getElementById('customOrder').value = ''; // Clear input after adding
+        }
 
         async function addOrder() {
             let orderInput = document.getElementById('orderInput');
