@@ -5,10 +5,10 @@ const bodyParser = require("body-parser");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: "https://boroburgersorders.onrender.com" })); // Allows requests from any domain
+app.use(cors({ origin: "*" })); // Allows all requests
 app.use(bodyParser.json());
 
-let orders = []; // Temporary order storage
+let orders = []; // Temporary storage for orders
 
 // Get all orders
 app.get("/orders", (req, res) => {
@@ -40,4 +40,3 @@ app.delete("/orders/:index", (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
-
