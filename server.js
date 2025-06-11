@@ -1,42 +1,41 @@
-const express = require("express");
+cconst express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: "*" })); // Allows all requests
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(cors({ origin: "*" })); // Allows requests from any frontend
 
-let orders = []; // Temporary storage for orders
+let orders = [];
+let orderCounter = 1; // Ensures unique order numbers that don't reset
 
-// Get all orders
+// ✅ Get all orders
 app.get("/orders", (req, res) => {
     res.json(orders);
 });
 
-// Add a new order
+// ✅ Add a new order
 app.post("/orders", (req, res) => {
-    if (!req.body.order || req.body.order.trim() === "") {
-        return res.status(400).json({ error: "Order cannot be empty!" });
+    const { item, price } = req.body;
+
+    if (!item || item.trim() === "" || typeof price !== "number") {
+        return res.status(400).json({ error: "Invalid order or price!" });
     }
 
-    orders.push(req.body.order);
-    res.json({ message: "Order added!", orders });
+    let newOrder = { id: orderCounter++, item, price };
+    orders.push(newOrder);
+    res.json({ message: "Order added!", order: newOrder });
 });
 
-// Delete an order
-app.delete("/orders/:index", (req, res) => {
-    const index = parseInt(req.params.index);
-    if (index < 0 || index >= orders.length) {
-        return res.status(404).json({ error: "Order not found!" });
-    }
-
-    orders.splice(index, 1);
-    res.json({ message: "Order deleted!", orders });
+// ✅ Delete an order by ID
+app.delete("/orders/:id", (req, res) => {
+    const orderId = parseInt(req.params.id);
+    orders = orders.filter(order => order.id !== orderId);
+    res.json({ message: `Order #${orderId} deleted!` });
 });
 
-// Start the server
+// ✅ Start the Express server
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
