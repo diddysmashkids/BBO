@@ -98,7 +98,7 @@
     </div>
 
     <script>
-        const backendURL = "https://boroburgersorders.onrender.com"; // Your Render backend URL
+        const backendURL = "https://boroburgersorders.onrender.com";
         let orderCounter = localStorage.getItem('orderCounter') || 1;
         let totalPrice = 0;
 
@@ -124,11 +124,11 @@
 
             let button = document.createElement("button");
             button.innerText = customOrder;
-            button.style.background = "#ffc107"; // Yellow button for custom autofill
+            button.style.background = "#ffc107";
             button.onclick = function() { autofill(customOrder); };
 
             document.querySelector(".autofill-buttons").appendChild(button);
-            document.getElementById('customOrder').value = ''; // Clear input after adding
+            document.getElementById('customOrder').value = '';
             
             let customOrders = JSON.parse(localStorage.getItem('customOrders')) || [];
             customOrders.push(customOrder);
@@ -187,7 +187,7 @@
         }
 
         function applyReferral() {
-            totalPrice *= 0.9; // Deduct 10%
+            totalPrice *= 0.9;
             document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
             alert("Referral code applied! 10% discount added.");
         }
@@ -210,5 +210,6 @@
     </script>
 </body>
 </html>
+
 
 
