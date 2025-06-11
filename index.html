@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Management System</title>
+    <title>BoroBurgers Orders</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
         .container { max-width: 600px; margin: auto; }
@@ -14,14 +14,14 @@
 </head>
 <body>
     <div class="container">
-        <h2>Order Management System</h2>
+        <h2>BoroBurgers Order Management</h2>
         <input type="text" id="orderInput" placeholder="Enter order details">
         <button onclick="addOrder()">Add Order</button>
         <ul id="orderList"></ul>
     </div>
 
     <script>
-        const backendURL = "https://boroburgersorders.onrender.com"; // Replace with your actual Render backend URL
+        const backendURL = "https://boroburgersorders.onrender.com"; // Your Render backend URL
 
         async function addOrder() {
             let orderInput = document.getElementById('orderInput');
