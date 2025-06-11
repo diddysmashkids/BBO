@@ -1,4 +1,5 @@
-const express = require("express");
+/* jshint esversion: 6 */
+const express = require("express"); // You forgot to import express!
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
@@ -31,3 +32,12 @@ app.delete("/orders/:index", (req, res) => {
     if (index < 0 || index >= orders.length) {
         return res.status(404).json({ error: "Order not found!" });
     }
+
+    orders.splice(index, 1);
+    res.json({ message: "Order deleted!", orders });
+}); // This closing brace was missing!
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});
