@@ -3,21 +3,31 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
 app.use(cors());
 app.use(bodyParser.json());
 
-let orders = [];
+let orders = []; // Temporary storage for orders
 
-app.get("/orders", (req, res) => res.json(orders));
+// Get all orders
+app.get("/orders", (req, res) => {
+    res.json(orders);
+});
 
+// Add a new order
 app.post("/orders", (req, res) => {
+    if (!req.body.order || req.body.order.trim() === "") {
+        return res.status(400).json({ error: "Order cannot be empty!" });
+    }
+
     orders.push(req.body.order);
-    res.json({ message: "Order added!" });
+    res.json({ message: "Order added!", orders });
 });
 
+// Delete an order
 app.delete("/orders/:index", (req, res) => {
-    orders.splice(req.params.index, 1);
-    res.json({ message: "Order deleted!" });
-});
-
-app.listen(3000, () => console.log("Server running on port 3000"));
+    const index = parseInt(req.params.index);
+    if (index < 0 || index >= orders.length) {
+        return res.status(404).json({ error: "Order not found!" });
+    }
