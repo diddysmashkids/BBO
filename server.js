@@ -1,15 +1,14 @@
-/* jshint esversion: 6 */
-const express = require("express"); // You forgot to import express!
+const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({ origin: "*" })); // Allows requests from any domain
 app.use(bodyParser.json());
 
-let orders = []; // Temporary storage for orders
+let orders = []; // Temporary order storage
 
 // Get all orders
 app.get("/orders", (req, res) => {
@@ -35,9 +34,10 @@ app.delete("/orders/:index", (req, res) => {
 
     orders.splice(index, 1);
     res.json({ message: "Order deleted!", orders });
-}); // This closing brace was missing!
+});
 
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
+
