@@ -22,6 +22,8 @@
     </div>
 
     <script>
+        const backendURL = "https://your-app.onrender.com"; // Replace with your live backend URL
+
         async function addOrder() {
             let orderInput = document.getElementById('orderInput');
             if (orderInput.value.trim() === '') {
@@ -30,7 +32,7 @@
             }
 
             try {
-                let response = await fetch("http://localhost:3000/orders", {
+                let response = await fetch(`${backendURL}/orders`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ order: orderInput.value })
@@ -49,7 +51,7 @@
         }
 
         async function fetchOrders() {
-            let response = await fetch("http://localhost:3000/orders");
+            let response = await fetch(`${backendURL}/orders`);
             let orders = await response.json();
 
             let orderList = document.getElementById('orderList');
@@ -59,7 +61,7 @@
         }
 
         async function deleteOrder(index) {
-            await fetch(`http://localhost:3000/orders/${index}`, { method: "DELETE" });
+            await fetch(`${backendURL}/orders/${index}`, { method: "DELETE" });
             fetchOrders();
         }
 
