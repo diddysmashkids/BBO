@@ -63,20 +63,24 @@
             width: auto;
             margin: 5px;
         }
+        .price-section {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>BoroBurgers Order Management</h2>
         <input type="text" id="orderInput" placeholder="Enter order details">
+        <input type="number" id="orderPrice" placeholder="Set price (£)">
         <button onclick="addOrder()">Add Order</button>
 
         <div class="autofill-buttons">
             <h4>Quick Fill Options:</h4>
-            <button onclick="autofill('The Classic')">The Classic </button>
-            <button onclick="autofill('The Serbian Burger')">The Serbian Burger </button>
-            <button onclick="autofill('The BigMak')">The BigMak </button>
-            <button onclick="autofill('Meal')">Meal </button>
+            <button onclick="autofill('The Classic')">The Classic</button>
+            <button onclick="autofill('The Serbian Burger')">The Serbian Burger</button>
+            <button onclick="autofill('The BigMak')">The BigMak</button>
+            <button onclick="addMeal()">Meal + 🍟🥤</button>
         </div>
 
         <div class="custom-autofill">
@@ -86,13 +90,29 @@
         </div>
 
         <ul id="orderList"></ul>
+        
+        <div class="price-section">
+            <h4>Total Price: £<span id="totalPrice">0.00</span></h4>
+            <button onclick="applyReferral()">Referral Code (10% Off)</button>
+        </div>
     </div>
 
     <script>
         const backendURL = "https://boroburgersorders.onrender.com"; // Your Render backend URL
+        let orderCounter = localStorage.getItem('orderCounter') || 1;
+        let totalPrice = 0;
 
         function autofill(order) {
             document.getElementById('orderInput').value = order;
+        }
+
+        function addMeal() {
+            let input = document.getElementById('orderInput');
+            if (input.value.trim() !== '') {
+                input.value += " + Meal 🍟🥤";
+            } else {
+                alert("Enter an order first before adding a meal!");
+            }
         }
 
         function addCustomAutofill() {
@@ -109,28 +129,39 @@
 
             document.querySelector(".autofill-buttons").appendChild(button);
             document.getElementById('customOrder').value = ''; // Clear input after adding
+            
+            let customOrders = JSON.parse(localStorage.getItem('customOrders')) || [];
+            customOrders.push(customOrder);
+            localStorage.setItem('customOrders', JSON.stringify(customOrders));
         }
 
         async function addOrder() {
             let orderInput = document.getElementById('orderInput');
-            if (orderInput.value.trim() === '') {
-                alert("Order cannot be empty!");
+            let priceInput = document.getElementById('orderPrice');
+            if (orderInput.value.trim() === '' || priceInput.value.trim() === '') {
+                alert("Order and price cannot be empty!");
                 return;
             }
+
+            let order = { id: orderCounter++, item: orderInput.value, price: parseFloat(priceInput.value) };
+            localStorage.setItem('orderCounter', orderCounter);
 
             try {
                 let response = await fetch(`${backendURL}/orders`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ order: orderInput.value })
+                    body: JSON.stringify(order)
                 });
 
                 if (!response.ok) {
                     throw new Error("Failed to add order.");
                 }
 
-                alert("Order added successfully!");
+                totalPrice += order.price;
+                document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
+                alert(`Order #${order.id} added successfully!`);
                 orderInput.value = '';
+                priceInput.value = '';
                 fetchOrders();
             } catch (error) {
                 alert(error.message);
@@ -142,17 +173,40 @@
             let orders = await response.json();
 
             let orderList = document.getElementById('orderList');
-            orderList.innerHTML = orders.map((order, index) =>
-                `<li>${order} <button onclick="deleteOrder(${index})">Delete</button></li>`
+            orderList.innerHTML = orders.map(order =>
+                `<li>#${order.id} - ${order.item} (£${order.price.toFixed(2)}) 
+                <button onclick="deleteOrder(${order.id}, ${order.price})">Delete</button></li>`
             ).join('');
         }
 
-        async function deleteOrder(index) {
-            await fetch(`${backendURL}/orders/${index}`, { method: "DELETE" });
+        async function deleteOrder(id, price) {
+            await fetch(`${backendURL}/orders/${id}`, { method: "DELETE" });
+            totalPrice -= price;
+            document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
             fetchOrders();
         }
 
-        window.onload = fetchOrders;
+        function applyReferral() {
+            totalPrice *= 0.9; // Deduct 10%
+            document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
+            alert("Referral code applied! 10% discount added.");
+        }
+
+        function loadCustomButtons() {
+            let customOrders = JSON.parse(localStorage.getItem('customOrders')) || [];
+            customOrders.forEach(order => {
+                let button = document.createElement("button");
+                button.innerText = order;
+                button.style.background = "#ffc107";
+                button.onclick = function() { autofill(order); };
+                document.querySelector(".autofill-buttons").appendChild(button);
+            });
+        }
+
+        window.onload = function () {
+            fetchOrders();
+            loadCustomButtons();
+        };
     </script>
 </body>
 </html>
