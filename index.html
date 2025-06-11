@@ -18,6 +18,11 @@
             padding: 20px;
             box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
             border-radius: 12px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         h2 {
             color: #007bff;
@@ -29,10 +34,6 @@
             font-size: 16px;
             border-radius: 8px;
             transition: 0.3s ease-in-out;
-        }
-        input {
-            width: 80%;
-            border: 2px solid #ddd;
         }
         button {
             cursor: pointer;
@@ -65,6 +66,11 @@
             display: flex;
             justify-content: space-between;
             border-radius: 8px;
+            animation: fadeInOrder 0.5s ease-in-out;
+        }
+        @keyframes fadeInOrder {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
         .price-section {
             margin-top: 25px;
@@ -94,6 +100,14 @@
             <button onclick="addMeal()">Add Meal 🍟🥤 (£2.99)</button>
         </div>
 
+        <div class="custom-autofill">
+            <h4>✨ Extra Custom Buttons (No Price)</h4>
+            <button onclick="autofillCustom('Custom Item 1')">Custom 1</button>
+            <button onclick="autofillCustom('Custom Item 2')">Custom 2</button>
+            <button onclick="autofillCustom('Custom Item 3')">Custom 3</button>
+            <button onclick="autofillCustom('Custom Item 4')">Custom 4</button>
+        </div>
+
         <ul id="orderList"></ul>
         
         <div class="price-section">
@@ -109,6 +123,11 @@
         function autofill(item, price) {
             document.getElementById('orderInput').value = item;
             document.getElementById('orderInput').setAttribute("data-price", price);
+        }
+
+        function autofillCustom(item) {
+            document.getElementById('orderInput').value = item;
+            document.getElementById('orderInput').removeAttribute("data-price");
         }
 
         function addMeal() {
@@ -163,9 +182,17 @@
 
             let orderList = document.getElementById('orderList');
             orderList.innerHTML = orders.map(order =>
-                `<li>#${order.id} - ${order.item} (£${order.price.toFixed(2)}) 
-                <button onclick="deleteOrder(${order.id})">Delete</button></li>`
+                `<li id="order-${order.id}">#${order.id} - ${order.item} (£${order.price.toFixed(2)}) 
+                <button onclick="deleteOrder(${order.id}, ${order.price})">❌</button></li>`
             ).join('');
+        }
+
+        async function deleteOrder(id, price) {
+            await fetch(`${backendURL}/orders/${id}`, { method: "DELETE" });
+            totalPrice -= price;
+            document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
+            document.getElementById(`order-${id}`).style.opacity = "0"; // Smooth fade-out
+            setTimeout(() => fetchOrders(), 300); // Reload after fade-out
         }
 
         function applyReferral() {
@@ -174,7 +201,6 @@
 
             lastOrderPrice *= 0.9;
             lastOrderPriceElement.innerText = lastOrderPrice.toFixed(2);
-
             document.getElementById('referralButton').style.display = "none";  
             alert("Referral code applied! 10% discount added.");
         }
@@ -183,6 +209,7 @@
     </script>
 </body>
 </html>
+
 
 
 
