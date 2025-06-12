@@ -4,280 +4,844 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>BoroBurgers Orders - Dashboard</title>
-  <!-- Google Fonts for a professional look -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    /* Global Styling */
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #f8f9fa, #e3e7eb);
+    :root {
+      --primary: #ff6b35;
+      --primary-dark: #e55a2b;
+      --secondary: #2563eb;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --dark: #1f2937;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      --gradient-brand: linear-gradient(135deg, #ff6b35 0%, #f12711 100%);
+      --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    * {
       margin: 0;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-    }
-    .container {
-      position: relative;
-      max-width: 700px;
-      width: 100%;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-      padding: 30px;
-      animation: fadeIn 0.6s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    h2, h3, h4 {
-      color: #007bff;
-      margin-bottom: 15px;
-    }
-    input, button {
-      margin: 8px 4px;
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      transition: all 0.3s ease-in-out;
-    }
-    input:focus {
-      outline: none;
-      border-color: #007bff;
-    }
-    button {
-      cursor: pointer;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
-    }
-    button:hover {
-      background-color: #0056b3;
-      transform: scale(1.02);
-    }
-    /* Quick Fill & Custom Autofill Buttons */
-    .autofill-buttons,
-    .custom-autofill {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .autofill-buttons button,
-    .custom-autofill button {
-      background-color: #28a745;
-      font-size: 14px;
-    }
-    .autofill-buttons button:hover,
-    .custom-autofill button:hover {
-      background-color: #218838;
-    }
-    /* Extra Add-on Buttons (update price) */
-    .autofill-buttons-extra {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .autofill-buttons-extra button {
-      background-color: #28a745;
-      font-size: 14px;
-    }
-    .autofill-buttons-extra button:hover {
-      background-color: #218838;
-    }
-    /* No Add-on Buttons (append text only, leave price unchanged) */
-    .autofill-buttons-no-extra {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .autofill-buttons-no-extra button {
-      background-color: #007bff;
-      font-size: 14px;
-    }
-    .autofill-buttons-no-extra button:hover {
-      background-color: #0056b3;
-    }
-    /* Discount Options */
-    .discount-buttons {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .discount-buttons button {
-      background-color: #dc3545;
-      font-size: 14px;
-    }
-    .discount-buttons button:hover {
-      background-color: #c82333;
-    }
-    /* Order List Styling */
-    ul {
-      list-style-type: none;
       padding: 0;
+      box-sizing: border-box;
     }
-    li {
-      background: #f4f4f4;
-      margin: 8px 0;
-      padding: 12px;
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--gradient-bg);
+      min-height: 100vh;
+      color: var(--gray-900);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Header */
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-radius: 8px;
-      animation: fadeInOrder 0.5s ease-in-out;
+      padding: 0 1.5rem;
     }
-    @keyframes fadeInOrder {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    /* Price Section */
-    .price-section {
-      margin-top: 20px;
-      text-align: center;
+
+    .logo-icon {
+      font-size: 2rem;
+      filter: drop-shadow(0 2px 4px rgba(255, 107, 53, 0.3));
     }
-    /* Notification Bar */
-    #notification {
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 2rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Cards */
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .card-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--gray-100);
+      background: linear-gradient(90deg, var(--gray-50) 0%, rgba(255, 255, 255, 0.8) 100%);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gray-800);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    /* Button System */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: 0.75rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn:before {
+      content: '';
       position: absolute;
-      top: -60px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #28a745;
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 8px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease-in-out;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
     }
-    #notification.error {
-      background: #dc3545;
+
+    .btn:hover:before {
+      left: 100%;
     }
-    /* Admin Login Modal */
+
+    .btn-primary {
+      background: var(--gradient-brand);
+      color: white;
+      box-shadow: 0 4px 14px 0 rgba(255, 107, 53, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px 0 rgba(255, 107, 53, 0.5);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--secondary) 0%, #1d4ed8 100%);
+      color: white;
+      box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px 0 rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+      color: white;
+      box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px 0 rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+      color: white;
+      box-shadow: 0 4px 14px 0 rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px 0 rgba(239, 68, 68, 0.4);
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+      color: white;
+      box-shadow: 0 4px 14px 0 rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-warning:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px 0 rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--gray-700);
+      border: 1px solid var(--gray-200);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: var(--gray-300);
+    }
+
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+      border-radius: 0.5rem;
+    }
+
+    /* Form Elements */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .input-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    .form-input {
+      padding: 0.875rem 1rem;
+      border: 2px solid var(--gray-200);
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+      background: white;
+    }
+
+    /* Grid System */
+    .grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    @media (max-width: 768px) {
+      .grid-cols-2, .grid-cols-3, .grid-cols-4 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .grid-cols-3, .grid-cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    /* Button Groups */
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    /* Order List */
+    .order-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .order-item {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(20px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: slideInUp 0.5s ease-out;
+    }
+
+    .order-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      background: white;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .order-info {
+      flex: 1;
+    }
+
+    .order-id {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .order-details {
+      color: var(--gray-700);
+      font-size: 0.95rem;
+    }
+
+    .order-price {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-right: 1rem;
+    }
+
+    /* Price Display */
+    .price-display {
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(241, 39, 17, 0.1) 100%);
+      border-radius: 1rem;
+      border: 2px dashed var(--primary);
+      margin: 1.5rem 0;
+    }
+
+    .price-label {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      margin-bottom: 0.5rem;
+    }
+
+    .price-amount {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Modal */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      right: 0;
+      bottom: 0;
       background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
       display: none;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       z-index: 1000;
+      padding: 1rem;
     }
+
     .modal {
-      background: #fff;
-      border-radius: 8px;
-      padding: 30px;
-      width: 90%;
+      background: white;
+      border-radius: 1.5rem;
+      box-shadow: var(--shadow-xl);
+      width: 100%;
       max-width: 400px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-      animation: slideIn 0.4s ease-in-out;
+      overflow: hidden;
+      animation: modalSlideIn 0.3s ease-out;
     }
-    @keyframes slideIn {
-      from { transform: translateY(-20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
-    .modal input {
-      width: calc(100% - 30px);
-      margin: 10px 0;
+
+    .modal-header {
+      padding: 2rem 2rem 1rem;
+      text-align: center;
     }
-    .modal button {
-      width: calc(50% - 20px);
-      margin: 10px;
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-subtitle {
+      color: var(--gray-600);
+      font-size: 0.875rem;
+    }
+
+    .modal-body {
+      padding: 0 2rem 2rem;
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: var(--shadow-xl);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1100;
+      max-width: 400px;
+      border-left: 4px solid var(--success);
+    }
+
+    .notification.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .notification.error {
+      border-left-color: var(--danger);
+    }
+
+    .notification-icon {
+      font-size: 1.25rem;
+    }
+
+    .notification-message {
+      flex: 1;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    /* Status Indicators */
+    .status-online {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--success);
+      font-weight: 500;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Admin Badge */
+    .admin-badge {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--gray-500);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+
+    .empty-state-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--gray-700);
+    }
+
+    .empty-state-description {
+      font-size: 0.875rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 640px) {
+      .header-content {
+        padding: 0 1rem;
+      }
+      
+      .main-content {
+        padding: 1rem;
+      }
+      
+      .card-body,
+      .card-header {
+        padding: 1rem;
+      }
+      
+      .btn-group {
+        gap: 0.5rem;
+      }
+      
+      .btn {
+        padding: 0.625rem 1rem;
+        font-size: 0.8rem;
+      }
+      
+      .order-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .order-price {
+        margin-right: 0;
+        align-self: flex-end;
+      }
+      
+      .notification {
+        top: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+      }
+    }
+
+    /* Loading Animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <!-- Notification Bar -->
-  <div id="notification"></div>
-
-  <div class="container">
-    <h2>🍔 BoroBurgers Order Management 🍟🥤</h2>
-    
-    <!-- Public Section: Order List -->
-    <div id="publicSection">
-      <ul id="orderList"></ul>
-      <div class="price-section">
-        <h4>Last Order Price: £<span id="lastOrderPrice">0.00</span></h4>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <span class="logo-icon">🍔</span>
+          <span>BoroBurgers</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div class="status-online">
+            <span class="status-dot"></span>
+            System Online
+          </div>
+          <div id="adminBadge" class="admin-badge" style="display: none;">
+            👨‍💼 Admin Mode
+          </div>
+          <button id="adminLoginButton" class="btn btn-ghost btn-sm" onclick="showAdminModal()">
+            🔐 Admin Login
+          </button>
+          <button id="logoutButton" class="btn btn-ghost btn-sm" style="display: none;" onclick="logoutAdmin()">
+            🚪 Logout
+          </button>
+        </div>
       </div>
-      <button id="adminLoginButton" onclick="showAdminModal()">Admin Login</button>
-    </div>
+    </header>
 
-    <!-- Admin Section: Visible After Login -->
-    <div id="adminSection" style="display:none;">
-      <button onclick="logoutAdmin()">Logout Admin</button>
-      <h3>Admin Dashboard</h3>
-      <input type="text" id="orderInput" placeholder="Enter order details" />
-      <button onclick="addOrder()">Add Order</button>
-      
-      <!-- Quick Fill Options (that update price) -->
-      <div class="autofill-buttons">
-        <h4>🔥 Quick Fill Options:</h4>
-        <button onclick="autofill('The Classic', 5.99)">The Classic (£5.99)</button>
-        <button onclick="autofill('The Serbian Burger', 6.49)">The Serbian Burger (£6.49)</button>
-        <button onclick="autofill('The BigMak', 7.99)">The BigMak (£7.99)</button>
-        <button onclick="addMeal()">Add Meal 🍟🥤 (£2.99)</button>
-      </div>
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="grid grid-cols-1" style="gap: 2rem;">
+        
+        <!-- Orders Display Card -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">
+              📋 Current Orders
+            </h2>
+          </div>
+          <div class="card-body">
+            <div id="orderList" class="order-list">
+              <div class="empty-state">
+                <div class="empty-state-icon">🍽️</div>
+                <div class="empty-state-title">No orders yet</div>
+                <div class="empty-state-description">Orders will appear here once they're added</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <!-- Extra Custom Buttons (append text only, no price update) -->
-      <div class="custom-autofill">
-        <h4>✨ Extra Custom Buttons (No Price):</h4>
-        <button onclick="autofillCustom('Custom Item 1')">Custom 1</button>
-        <button onclick="autofillCustom('Custom Item 2')">Custom 2</button>
-        <button onclick="autofillCustom('Custom Item 3')">Custom 3</button>
-        <button onclick="autofillCustom('Custom Item 4')">Custom 4</button>
-      </div>
+        <!-- Price Display -->
+        <div class="price-display">
+          <div class="price-label">Last Order Total</div>
+          <div class="price-amount">£<span id="lastOrderPrice">0.00</span></div>
+        </div>
 
-      <!-- Extra Add-on Buttons (that update price) -->
-      <div class="autofill-buttons-extra">
-        <h4>Add-ons:</h4>
-        <button onclick="autofill('Extra Lettuce', 0.75)">Extra Lettuce (£0.75)</button>
-        <button onclick="autofill('Extra Tomatoes', 0.75)">Extra Tomatoes (£0.75)</button>
-        <button onclick="autofill('Extra Caramelized Onions', 1.00)">Extra Caramelized Onions (£1.00)</button>
-        <button onclick="autofill('Extra Mayo', 0.50)">Extra Mayo (£0.50)</button>
-      </div>
+        <!-- Admin Panel -->
+        <div id="adminSection" style="display: none;">
+          <div class="grid grid-cols-1" style="gap: 2rem;">
+            
+            <!-- Order Input -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  ➕ Add New Order
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="input-group">
+                  <label class="input-label">Order Details</label>
+                  <input type="text" id="orderInput" class="form-input" placeholder="Enter order details..." />
+                </div>
+                <button class="btn btn-primary" onclick="addOrder()">
+                  ✅ Add Order
+                </button>
+              </div>
+            </div>
 
-      <!-- "No Add-on" Buttons (append text only, leave price unchanged) -->
-      <div class="autofill-buttons-no-extra">
-        <h4>No Add-ons:</h4>
-        <button onclick="autofillCustom('No Lettuce')">No Lettuce</button>
-        <button onclick="autofillCustom('No Tomatoes')">No Tomatoes</button>
-        <button onclick="autofillCustom('No Caramelized Onions')">No Caramelized Onions</button>
-        <button onclick="autofillCustom('No Mayo')">No Mayo</button>
-      </div>
+            <!-- Quick Fill Options -->
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">
+                  🔥 Menu Items
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="btn-group">
+                  <button class="btn btn-secondary" onclick="autofill('The Classic', 5.99)">
+                    🍔 The Classic (£5.99)
+                  </button>
+                  <button class="btn btn-secondary" onclick="autofill('The Serbian Burger', 6.49)">
+                    🇷🇸 The Serbian Burger (£6.49)
+                  </button>
+                  <button class="btn btn-secondary" onclick="autofill('The BigMak', 7.99)">
+                    🍔 The BigMak (£7.99)
+                  </button>
+                  <button class="btn btn-warning" onclick="addMeal()">
+                    🍟🥤 Add Meal (+£2.99)
+                  </button>
+                </div>
+              </div>
+            </div>
 
-      <!-- Discount Options (only for admin) -->
-      <div class="discount-buttons">
-        <h4>Discount Options:</h4>
-        <button onclick="applyReferral()">Referral Code (10% Off)</button>
-        <button onclick="applyFamilyDiscount()">Friends &amp; Family (5% Off)</button>
+            <!-- Add-ons -->
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">
+                  🥬 Extra Add-ons
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="btn-group">
+                  <button class="btn btn-success" onclick="autofill('Extra Lettuce', 0.75)">
+                    🥬 Extra Lettuce (+£0.75)
+                  </button>
+                  <button class="btn btn-success" onclick="autofill('Extra Tomatoes', 0.75)">
+                    🍅 Extra Tomatoes (+£0.75)
+                  </button>
+                  <button class="btn btn-success" onclick="autofill('Extra Caramelized Onions', 1.00)">
+                    🧅 Extra Caramelized Onions (+£1.00)
+                  </button>
+                  <button class="btn btn-success" onclick="autofill('Extra Mayo', 0.50)">
+                    🥄 Extra Mayo (+£0.50)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Customizations -->
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">
+                  🚫 Remove Items
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="btn-group">
+                  <button class="btn btn-ghost" onclick="autofillCustom('No Lettuce')">
+                    ❌ No Lettuce
+                  </button>
+                  <button class="btn btn-ghost" onclick="autofillCustom('No Tomatoes')">
+                    ❌ No Tomatoes
+                  </button>
+                  <button class="btn btn-ghost" onclick="autofillCustom('No Caramelized Onions')">
+                    ❌ No Caramelized Onions
+                  </button>
+                  <button class="btn btn-ghost" onclick="autofillCustom('No Mayo')">
+                    ❌ No Mayo
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Custom Items -->
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">
+                  ✨ Custom Items
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="btn-group">
+                  <button class="btn btn-ghost" onclick="autofillCustom('Custom Item 1')">
+                    📝 Custom 1
+                  </button>
+                  <button class="btn btn-ghost" onclick="autofillCustom('Custom Item 2')">
+                    📝 Custom 2
+                  </button>
+                  <button class="btn btn-ghost" onclick="autofillCustom('Custom Item 3')">
+                    📝 Custom 3
+                  </button>
+                  <button class="btn btn-ghost" onclick="autofillCustom('Custom Item 4')">
+                    📝 Custom 4
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Discounts -->
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">
+                  💰 Discount Options
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="btn-group">
+                  <button class="btn btn-danger" onclick="applyReferral()">
+                    🎯 Referral Code (10% Off)
+                  </button>
+                  <button class="btn btn-danger" onclick="applyFamilyDiscount()">
+                    👨‍👩‍👧‍👦 Friends & Family (5% Off)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
-    </div>
+    </main>
   </div>
 
   <!-- Admin Login Modal -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal">
-      <h3>Admin Login</h3>
-      <input type="text" id="adminUsername" placeholder="Username" />
-      <input type="password" id="adminPassword" placeholder="Password" />
-      <div style="display: flex; justify-content: center;">
-        <button onclick="adminLogin()">Login</button>
-        <button onclick="hideAdminModal()">Cancel</button>
+      <div class="modal-header">
+        <h3 class="modal-title">🔐 Admin Login</h3>
+        <p class="modal-subtitle">Enter your credentials to access admin features</p>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <label class="input-label">Username</label>
+          <input type="text" id="adminUsername" class="form-input" placeholder="Enter username" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Password</label>
+          <input type="password" id="adminPassword" class="form-input" placeholder="Enter password" />
+        </div>
+        <div class="btn-group" style="justify-content: center; margin-top: 1.5rem;">
+          <button class="btn btn-primary" onclick="adminLogin()">
+            🚀 Login
+          </button>
+          <button class="btn btn-ghost" onclick="hideAdminModal()">
+            ❌ Cancel
+          </button>
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- Notification -->
+  <div id="notification" class="notification">
+    <span class="notification-icon">✅</span>
+    <span class="notification-message"></span>
   </div>
 
   <script>
@@ -285,60 +849,88 @@
     let orderCounter = localStorage.getItem('orderCounter') || 1;
     let isAdmin = sessionStorage.getItem('adminLoggedIn') === "true";
 
-    // Show admin section if already logged in
+    // Initialize admin state
     if (isAdmin) {
-      document.getElementById('adminSection').style.display = "block";
-      document.getElementById('adminLoginButton').style.display = "none";
+      showAdminInterface();
     }
 
-    // Notification helper: displays messages briefly.
+    // Notification system
     function showNotification(message, type = "success") {
       const notification = document.getElementById('notification');
-      notification.textContent = message;
-      notification.className = (type === "error") ? "error" : "";
-      notification.style.opacity = "1";
-      setTimeout(() => { notification.style.opacity = "0"; }, 2500);
+      const icon = notification.querySelector('.notification-icon');
+      const messageEl = notification.querySelector('.notification-message');
+      
+      messageEl.textContent = message;
+      icon.textContent = type === "error" ? "❌" : "✅";
+      notification.className = `notification ${type === "error" ? "error" : ""} show`;
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
     }
 
-    // Admin modal functions.
+    // Admin interface management
+    function showAdminInterface() {
+      document.getElementById('adminSection').style.display = 'block';
+      document.getElementById('adminLoginButton').style.display = 'none';
+      document.getElementById('logoutButton').style.display = 'block';
+      document.getElementById('adminBadge').style.display = 'flex';
+    }
+
+    function hideAdminInterface() {
+      document.getElementById('adminSection').style.display = 'none';
+      document.getElementById('adminLoginButton').style.display = 'block';
+      document.getElementById('logoutButton').style.display = 'none';
+      document.getElementById('adminBadge').style.display = 'none';
+    }
+
+    // Modal functions
     function showAdminModal() {
       document.getElementById('adminModal').style.display = 'flex';
-    }
-    function hideAdminModal() {
-      document.getElementById('adminModal').style.display = 'none';
+      document.getElementById('adminUsername').focus();
     }
 
-    // Dummy admin credentials (for demonstration only)
+    function hideAdminModal() {
+      document.getElementById('adminModal').style.display = 'none';
+      document.getElementById('adminUsername').value = '';
+      document.getElementById('adminPassword').value = '';
+    }
+
+    // Admin authentication
     const ADMIN_USERNAME = "admin";
     const ADMIN_PASSWORD = "admin123";
+
     function adminLogin() {
-      const username = document.getElementById('adminUsername').value;
-      const password = document.getElementById('adminPassword').value;
+      const username = document.getElementById('adminUsername').value.trim();
+      const password = document.getElementById('adminPassword').value.trim();
+      
       if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
         sessionStorage.setItem('adminLoggedIn', "true");
         isAdmin = true;
-        document.getElementById('adminSection').style.display = "block";
-        document.getElementById('adminLoginButton').style.display = "none";
+        showAdminInterface();
         hideAdminModal();
-        showNotification("Admin logged in successfully!");
+        showNotification("🎉 Admin login successful! Welcome back.");
       } else {
-        showNotification("Invalid credentials!", "error");
+        showNotification("Invalid credentials. Please try again.", "error");
+        document.getElementById('adminPassword').value = '';
+        document.getElementById('adminPassword').focus();
       }
     }
+
     function logoutAdmin() {
       sessionStorage.removeItem('adminLoggedIn');
       isAdmin = false;
-      document.getElementById('adminSection').style.display = "none";
-      document.getElementById('adminLoginButton').style.display = "inline-block";
-      showNotification("Admin logged out.");
+      hideAdminInterface();
+      showNotification("👋 Admin logged out successfully.");
     }
 
-    // Append text and update price if applicable.
+    // Order management functions
     function autofill(item, price) {
       if (!isAdmin) return;
+      
       const input = document.getElementById('orderInput');
-      // Use default "0" if data-price is not set
       const currentPrice = parseFloat(input.getAttribute("data-price") || "0");
+      
       if (input.value.trim()) {
         input.value += " + " + item;
         input.setAttribute("data-price", currentPrice + price);
@@ -346,113 +938,279 @@
         input.value = item;
         input.setAttribute("data-price", price);
       }
+      
+      // Add visual feedback
+      input.style.borderColor = 'var(--success)';
+      setTimeout(() => {
+        input.style.borderColor = '';
+      }, 1000);
     }
 
-    // Append text only without altering the current price.
     function autofillCustom(item) {
       if (!isAdmin) return;
+      
       const input = document.getElementById('orderInput');
       if (input.value.trim()) {
         input.value += " + " + item;
       } else {
         input.value = item;
       }
+      
+      // Add visual feedback
+      input.style.borderColor = 'var(--secondary)';
+      setTimeout(() => {
+        input.style.borderColor = '';
+      }, 1000);
     }
 
-    // Append a meal option (updates price).
     function addMeal() {
       if (!isAdmin) return;
+      
       const input = document.getElementById('orderInput');
       const current = parseFloat(input.getAttribute("data-price") || "0");
+      
       if (input.value.trim()) {
         input.value += " + Meal 🍟🥤";
         input.setAttribute("data-price", current + 2.99);
+        
+        // Add visual feedback
+        input.style.borderColor = 'var(--warning)';
+        setTimeout(() => {
+          input.style.borderColor = '';
+        }, 1000);
       } else {
-        showNotification("Enter an order first before adding a meal!", "error");
+        showNotification("Please select a main item first before adding a meal!", "error");
       }
     }
 
-    // Add an order (admin only).
     async function addOrder() {
       if (!isAdmin) {
-        console.error("Admin login required to add orders.");
+        showNotification("Admin access required to add orders.", "error");
         return;
       }
+      
       const orderInput = document.getElementById('orderInput');
-      // Default to "0" if data-price is missing
+      const orderText = orderInput.value.trim();
       let price = parseFloat(orderInput.getAttribute("data-price") || "0");
-      if (!orderInput.value.trim()) {
-        showNotification("Order cannot be empty!", "error");
+      
+      if (!orderText) {
+        showNotification("Please enter order details!", "error");
+        orderInput.focus();
         return;
       }
-      const order = { id: orderCounter++, item: orderInput.value, price };
+      
+      const order = { 
+        id: orderCounter++, 
+        item: orderText, 
+        price: price 
+      };
+      
       localStorage.setItem('orderCounter', orderCounter);
+      
       try {
+        // Add loading state
+        const addButton = event.target;
+        const originalText = addButton.innerHTML;
+        addButton.innerHTML = '<span class="loading"></span> Adding...';
+        addButton.disabled = true;
+        
         const response = await fetch(`${backendURL}/orders`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(order)
         });
-        if (!response.ok) { throw new Error("Failed to add order."); }
+        
+        if (!response.ok) {
+          throw new Error("Failed to add order.");
+        }
+        
         document.getElementById('lastOrderPrice').innerText = price.toFixed(2);
-        showNotification(`Order #${order.id} added successfully!`);
+        showNotification(`🎉 Order #${order.id} added successfully!`);
+        
+        // Clear form
         orderInput.value = "";
         orderInput.removeAttribute("data-price");
-        fetchOrders();
+        
+        // Restore button
+        addButton.innerHTML = originalText;
+        addButton.disabled = false;
+        
+        await fetchOrders();
+        
       } catch (error) {
-        console.error(error.message);
-        showNotification("Error adding order!", "error");
+        console.error("Error adding order:", error);
+        showNotification("Failed to add order. Please try again.", "error");
+        
+        // Restore button
+        const addButton = document.querySelector('button[onclick="addOrder()"]');
+        addButton.innerHTML = '✅ Add Order';
+        addButton.disabled = false;
       }
     }
 
-    // Fetch orders and display them (admins see delete buttons).
     async function fetchOrders() {
       try {
         const response = await fetch(`${backendURL}/orders`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch orders");
+        }
+        
         const orders = await response.json();
         const orderList = document.getElementById('orderList');
-        orderList.innerHTML = orders.map(order => `
-          <li id="order-${order.id}">
-            #${order.id} - ${order.item} (£${order.price.toFixed(2)})
-            ${ isAdmin ? `<button onclick="deleteOrder(${order.id}, ${order.price})">❌</button>` : '' }
-          </li>
-        `).join('');
-      } catch (err) {
-        console.error("Error fetching orders:", err);
+        
+        if (orders.length === 0) {
+          orderList.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">🍽️</div>
+              <div class="empty-state-title">No orders yet</div>
+              <div class="empty-state-description">Orders will appear here once they're added</div>
+            </div>
+          `;
+        } else {
+          orderList.innerHTML = orders.map(order => `
+            <div class="order-item" id="order-${order.id}">
+              <div class="order-info">
+                <div class="order-id">Order #${order.id}</div>
+                <div class="order-details">${order.item}</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div class="order-price">£${order.price.toFixed(2)}</div>
+                ${isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deleteOrder(${order.id}, ${order.price})">🗑️ Delete</button>` : ''}
+              </div>
+            </div>
+          `).join('');
+        }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+        showNotification("Failed to load orders.", "error");
       }
     }
 
-    // Delete an order (admin only).
     async function deleteOrder(id, price) {
       if (!isAdmin) return;
-      await fetch(`${backendURL}/orders/${id}`, { method: "DELETE" });
-      const orderElem = document.getElementById(`order-${id}`);
-      orderElem.style.opacity = "0";
-      setTimeout(() => fetchOrders(), 300);
-      showNotification(`Order #${id} deleted successfully!`);
+      
+      if (!confirm(`Are you sure you want to delete Order #${id}?`)) {
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${backendURL}/orders/${id}`, { 
+          method: "DELETE" 
+        });
+        
+        if (!response.ok) {
+          throw new Error("Failed to delete order");
+        }
+        
+        const orderElement = document.getElementById(`order-${id}`);
+        if (orderElement) {
+          orderElement.style.transform = 'translateX(100%)';
+          orderElement.style.opacity = '0';
+          
+          setTimeout(async () => {
+            await fetchOrders();
+          }, 300);
+        }
+        
+        showNotification(`🗑️ Order #${id} deleted successfully!`);
+        
+      } catch (error) {
+        console.error("Error deleting order:", error);
+        showNotification("Failed to delete order.", "error");
+      }
     }
 
-    // Apply a 10% referral discount (admin only).
     function applyReferral() {
       if (!isAdmin) return;
-      const priceElem = document.getElementById('lastOrderPrice');
-      let price = parseFloat(priceElem.innerText) || 0;
-      price = price - (price * 0.1);
-      priceElem.innerText = price.toFixed(2);
-      showNotification("10% referral discount applied!");
+      
+      const priceElement = document.getElementById('lastOrderPrice');
+      let price = parseFloat(priceElement.innerText) || 0;
+      
+      if (price === 0) {
+        showNotification("No order to apply discount to!", "error");
+        return;
+      }
+      
+      const discountedPrice = price - (price * 0.1);
+      priceElement.innerText = discountedPrice.toFixed(2);
+      
+      // Add visual effect
+      priceElement.parentElement.style.transform = 'scale(1.05)';
+      priceElement.parentElement.style.borderColor = 'var(--success)';
+      
+      setTimeout(() => {
+        priceElement.parentElement.style.transform = '';
+        priceElement.parentElement.style.borderColor = '';
+      }, 1000);
+      
+      showNotification("🎯 10% referral discount applied!");
     }
 
-    // Apply a 5% friends & family discount (admin only).
     function applyFamilyDiscount() {
       if (!isAdmin) return;
-      const priceElem = document.getElementById('lastOrderPrice');
-      let price = parseFloat(priceElem.innerText) || 0;
-      price = price - (price * 0.05);
-      priceElem.innerText = price.toFixed(2);
-      showNotification("5% friends & family discount applied!");
+      
+      const priceElement = document.getElementById('lastOrderPrice');
+      let price = parseFloat(priceElement.innerText) || 0;
+      
+      if (price === 0) {
+        showNotification("No order to apply discount to!", "error");
+        return;
+      }
+      
+      const discountedPrice = price - (price * 0.05);
+      priceElement.innerText = discountedPrice.toFixed(2);
+      
+      // Add visual effect
+      priceElement.parentElement.style.transform = 'scale(1.05)';
+      priceElement.parentElement.style.borderColor = 'var(--success)';
+      
+      setTimeout(() => {
+        priceElement.parentElement.style.transform = '';
+        priceElement.parentElement.style.borderColor = '';
+      }, 1000);
+      
+      showNotification("👨‍👩‍👧‍👦 5% friends & family discount applied!");
     }
 
-    window.onload = fetchOrders;
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      // Enter key in admin modal
+      if (e.key === 'Enter' && document.getElementById('adminModal').style.display === 'flex') {
+        adminLogin();
+      }
+      
+      // Enter key in order input (admin only)
+      if (e.key === 'Enter' && document.activeElement.id === 'orderInput' && isAdmin) {
+        addOrder();
+      }
+      
+      // Escape key to close modal
+      if (e.key === 'Escape' && document.getElementById('adminModal').style.display === 'flex') {
+        hideAdminModal();
+      }
+    });
+
+    // Auto-refresh orders every 30 seconds
+    setInterval(fetchOrders, 30000);
+
+    // Initialize the application
+    window.addEventListener('load', async () => {
+      await fetchOrders();
+      
+      // Show welcome message
+      setTimeout(() => {
+        showNotification("🍔 Welcome to BoroBurgers Order Management!");
+      }, 500);
+    });
+
+    // Handle online/offline status
+    window.addEventListener('online', () => {
+      showNotification("🌐 Connection restored!");
+    });
+
+    window.addEventListener('offline', () => {
+      showNotification("📵 Connection lost. Some features may not work.", "error");
+    });
   </script>
 </body>
 </html>
