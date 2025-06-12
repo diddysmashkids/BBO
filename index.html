@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BoroBurgers Orders - Dashboard</title>
   <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
-    rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     /* Global Styles */
     body {
@@ -27,7 +25,7 @@
       width: 100%;
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
       padding: 30px;
       margin-bottom: 20px;
     }
@@ -48,7 +46,7 @@
       background-color: #007bff;
       color: #fff;
       border: none;
-      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+      box-shadow: 0 4px 8px rgba(0,123,255,0.4);
     }
     button:hover {
       background-color: #0056b3;
@@ -102,14 +100,14 @@
   <div class="container">
     <h2>🍔 BoroBurgers Order Management 🍟🥤</h2>
     
-    <!-- Login Button: This button now toggles the admin dashboard -->
+    <!-- Login Button (toggle functionality) -->
     <button id="adminLoginButton" onclick="toggleAdmin()">Admin Dashboard</button>
     
-    <!-- Admin Dashboard: Initially hidden; toggles via the button -->
+    <!-- Admin Dashboard, initially hidden -->
     <div class="section" id="adminSection" style="display: none;">
       <h3>Admin Dashboard</h3>
       <!-- Order Input Area -->
-      <input type="text" id="orderInput" placeholder="Enter order details" />
+      <input type="text" id="orderInput" placeholder="Enter order details">
       <button onclick="addOrder()">Add Order</button>
       
       <!-- Quick Fill Options -->
@@ -162,12 +160,11 @@
   <!-- Notification -->
   <div id="notification"></div>
   
-  <!-- JavaScript for Order Management and Admin Toggle -->
+  <!-- JavaScript for Order Management and Toggle Function -->
   <script>
-    // Toggle function to show/hide the admin dashboard
+    // Toggle the admin dashboard when the button is clicked
     function toggleAdmin() {
-      const adminSection = document.getElementById('adminSection');
-      // Toggle display property: if hidden, show; if visible, hide.
+      const adminSection = document.getElementById("adminSection");
       if (adminSection.style.display === "none" || adminSection.style.display === "") {
         adminSection.style.display = "block";
       } else {
@@ -175,16 +172,20 @@
       }
     }
     
+    // Function to show notifications
     function showNotification(message, type = "success") {
-      const notification = document.getElementById('notification');
+      const notification = document.getElementById("notification");
       notification.textContent = message;
       notification.className = type === "error" ? "error" : "";
       notification.style.opacity = "1";
-      setTimeout(() => { notification.style.opacity = "0"; }, 2500);
+      setTimeout(() => {
+        notification.style.opacity = "0";
+      }, 2500);
     }
     
+    // Order management functions
     function autofill(item, price) {
-      const input = document.getElementById('orderInput');
+      const input = document.getElementById("orderInput");
       const currentPrice = parseFloat(input.getAttribute("data-price") || "0");
       if (input.value.trim()) {
         input.value += " + " + item;
@@ -197,7 +198,7 @@
     }
     
     function autofillCustom(item) {
-      const input = document.getElementById('orderInput');
+      const input = document.getElementById("orderInput");
       if (input.value.trim()) {
         input.value += " + " + item;
       } else {
@@ -207,7 +208,7 @@
     }
     
     function addMeal() {
-      const input = document.getElementById('orderInput');
+      const input = document.getElementById("orderInput");
       const currentPrice = parseFloat(input.getAttribute("data-price") || "0");
       if (input.value.trim()) {
         input.value += " + Meal 🍟🥤";
@@ -219,25 +220,25 @@
     
     let orderCounter = 1;
     function addOrder() {
-      const orderInput = document.getElementById('orderInput');
+      const orderInput = document.getElementById("orderInput");
       const price = parseFloat(orderInput.getAttribute("data-price") || "0");
       if (!orderInput.value.trim()) {
         showNotification("Order cannot be empty!", "error");
         return;
       }
       const order = { id: orderCounter++, item: orderInput.value, price: price };
-      const orderList = document.getElementById('orderList');
-      const newOrder = document.createElement('li');
+      const orderList = document.getElementById("orderList");
+      const newOrder = document.createElement("li");
       newOrder.textContent = `#${order.id} - ${order.item} (£${price.toFixed(2)})`;
       orderList.appendChild(newOrder);
-      document.getElementById('lastOrderPrice').innerText = price.toFixed(2);
+      document.getElementById("lastOrderPrice").innerText = price.toFixed(2);
       showNotification(`Order #${order.id} added successfully!`);
       orderInput.value = "";
       orderInput.removeAttribute("data-price");
     }
     
     function applyReferral() {
-      const input = document.getElementById('orderInput');
+      const input = document.getElementById("orderInput");
       if (!input.value.trim()) {
         showNotification("Enter an order before applying discount.", "error");
         return;
@@ -255,7 +256,7 @@
     }
     
     function applyFamilyDiscount() {
-      const input = document.getElementById('orderInput');
+      const input = document.getElementById("orderInput");
       if (!input.value.trim()) {
         showNotification("Enter an order before applying discount.", "error");
         return;
