@@ -1,217 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BoroBurgers Orders</title>
-    <style>
-        body {
-            font-family: "Poppins", sans-serif;
-            background: linear-gradient(135deg, #f8f9fa, #e3e7eb);
-            margin: 20px;
-            text-align: center;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
-            border-radius: 12px;
-            animation: fadeIn 0.8s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        h2 {
-            color: #007bff;
-            font-weight: 600;
-        }
-        input, button {
-            margin: 8px;
-            padding: 12px;
-            font-size: 16px;
-            border-radius: 8px;
-            transition: 0.3s ease-in-out;
-        }
-        button {
-            cursor: pointer;
-            background: #007bff;
-            color: white;
-            border: none;
-            box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.4);
-        }
-        button:hover {
-            background: #0056b3;
-            box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.6);
-            transform: scale(1.05);
-        }
-        .autofill-buttons button {
-            background: #28a745;
-            margin: 6px;
-            font-size: 14px;
-        }
-        .autofill-buttons button:hover {
-            background: #218838;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            background: #f4f4f4;
-            margin: 8px 0;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            border-radius: 8px;
-            animation: fadeInOrder 0.5s ease-in-out;
-        }
-        @keyframes fadeInOrder {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .price-section {
-            margin-top: 25px;
-        }
-        #referralButton {
-            display: none;
-            background: #dc3545;
-            transition: 0.3s ease-in-out;
-        }
-        #referralButton:hover {
-            background: #c82333;
-            transform: scale(1.05);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BoroBurgers Orders</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #f8f9fa, #e3e7eb);
+      margin: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h2, h3, h4 {
+      color: #007bff;
+      font-weight: 600;
+    }
+    input, button {
+      margin: 8px;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      transition: 0.3s ease-in-out;
+    }
+    button {
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+      border: none;
+      box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.4);
+    }
+    button:hover {
+      background: #0056b3;
+      box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.6);
+      transform: scale(1.05);
+    }
+    .autofill-buttons button {
+      background: #28a745;
+      margin: 6px;
+      font-size: 14px;
+    }
+    .autofill-buttons button:hover {
+      background: #218838;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background: #f4f4f4;
+      margin: 8px 0;
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      border-radius: 8px;
+      animation: fadeInOrder 0.5s ease-in-out;
+    }
+    @keyframes fadeInOrder {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .price-section {
+      margin-top: 25px;
+    }
+    #referralButton {
+      display: none;
+      background: #dc3545;
+      transition: 0.3s ease-in-out;
+    }
+    #referralButton:hover {
+      background: #c82333;
+      transform: scale(1.05);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>🍔 BoroBurgers Order Management 🍟🥤</h2>
-        <input type="text" id="orderInput" placeholder="Enter order details">
-        <button onclick="addOrder()">Add Order</button>
-
-        <div class="autofill-buttons">
-            <h4>🔥 Quick Fill Options:</h4>
-            <button onclick="autofill('The Classic', 5.99)">The Classic (£5.99)</button>
-            <button onclick="autofill('The Serbian Burger', 6.49)">The Serbian Burger (£6.49)</button>
-            <button onclick="autofill('The BigMak', 7.99)">The BigMak (£7.99)</button>
-            <button onclick="addMeal()">Add Meal 🍟🥤 (£2.99)</button>
-        </div>
-
-        <div class="custom-autofill">
-            <h4>✨ Extra Custom Buttons (No Price)</h4>
-            <button onclick="autofillCustom('Custom Item 1')">Custom 1</button>
-            <button onclick="autofillCustom('Custom Item 2')">Custom 2</button>
-            <button onclick="autofillCustom('Custom Item 3')">Custom 3</button>
-            <button onclick="autofillCustom('Custom Item 4')">Custom 4</button>
-        </div>
-
-        <ul id="orderList"></ul>
-        
-        <div class="price-section">
-            <h4>Last Order Price: £<span id="lastOrderPrice">0.00</span></h4>
-            <button id="referralButton" onclick="applyReferral()">Referral Code (10% Off)</button>
-        </div>
+  <div class="container">
+    <h2>🍔 BoroBurgers Order Management 🍟🥤</h2>
+    
+    <!-- Public Section: Everyone sees the orders list -->
+    <div id="publicSection">
+      <ul id="orderList"></ul>
+      <div class="price-section">
+        <h4>Last Order Price: £<span id="lastOrderPrice">0.00</span></h4>
+      </div>
+      <!-- Button to show the admin login form -->
+      <button id="adminLoginButton" onclick="showAdminLogin()">Admin Login</button>
     </div>
-
-    <script>
-        const backendURL = "https://boroburgersorders.onrender.com";
-        let orderCounter = localStorage.getItem('orderCounter') || 1;
-
-        function autofill(item, price) {
-            document.getElementById('orderInput').value = item;
-            document.getElementById('orderInput').setAttribute("data-price", price);
+    
+    <!-- Admin Section: Only visible when logged in -->
+    <div id="adminSection" style="display:none;">
+      <button onclick="logoutAdmin()">Logout Admin</button>
+      <h3>Admin Dashboard</h3>
+      <input type="text" id="orderInput" placeholder="Enter order details">
+      <button onclick="addOrder()">Add Order</button>
+      
+      <div class="autofill-buttons">
+        <h4>🔥 Quick Fill Options:</h4>
+        <button onclick="autofill('The Classic', 5.99)">The Classic (£5.99)</button>
+        <button onclick="autofill('The Serbian Burger', 6.49)">The Serbian Burger (£6.49)</button>
+        <button onclick="autofill('The BigMak', 7.99)">The BigMak (£7.99)</button>
+        <button onclick="addMeal()">Add Meal 🍟🥤 (£2.99)</button>
+      </div>
+      <div class="custom-autofill">
+        <h4>✨ Extra Custom Buttons (No Price)</h4>
+        <button onclick="autofillCustom('Custom Item 1')">Custom 1</button>
+        <button onclick="autofillCustom('Custom Item 2')">Custom 2</button>
+        <button onclick="autofillCustom('Custom Item 3')">Custom 3</button>
+        <button onclick="autofillCustom('Custom Item 4')">Custom 4</button>
+      </div>
+      <div class="price-section">
+        <button id="referralButton" onclick="applyReferral()">Referral Code (10% Off)</button>
+      </div>
+    </div>
+    
+    <!-- Admin Login Form -->
+    <div id="adminLoginForm" style="display:none;">
+      <h3>Admin Login</h3>
+      <input type="text" id="adminUsername" placeholder="Username">
+      <input type="password" id="adminPassword" placeholder="Password">
+      <button onclick="adminLogin()">Login</button>
+      <button onclick="hideAdminLogin()">Cancel</button>
+    </div>
+  </div>
+  
+  <script>
+    const backendURL = "https://boroburgersorders.onrender.com";
+    let orderCounter = localStorage.getItem('orderCounter') || 1;
+    
+    // Check for admin status in sessionStorage on load.
+    let isAdmin = sessionStorage.getItem('adminLoggedIn') === "true";
+    if(isAdmin) {
+      document.getElementById('adminSection').style.display = "block";
+      document.getElementById('adminLoginButton').style.display = "none";
+    }
+    
+    // Show/hide the admin login form.
+    function showAdminLogin() {
+      document.getElementById('adminLoginForm').style.display = "block";
+    }
+    
+    function hideAdminLogin() {
+      document.getElementById('adminLoginForm').style.display = "none";
+    }
+    
+    // Dummy admin credentials.
+    const ADMIN_USERNAME = "admin";
+    const ADMIN_PASSWORD = "admin123";
+    
+    function adminLogin() {
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
+      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        sessionStorage.setItem('adminLoggedIn', "true");
+        isAdmin = true;
+        document.getElementById('adminSection').style.display = "block";
+        document.getElementById('adminLoginForm').style.display = "none";
+        document.getElementById('adminLoginButton').style.display = "none";
+        alert("Admin logged in successfully!");
+      } else {
+        alert("Invalid credentials!");
+      }
+    }
+    
+    function logoutAdmin() {
+      sessionStorage.removeItem('adminLoggedIn');
+      isAdmin = false;
+      document.getElementById('adminSection').style.display = "none";
+      document.getElementById('adminLoginButton').style.display = "inline-block";
+      alert("Admin logged out.");
+    }
+    
+    // Append (instead of overwrite) quick fill items and update price.
+    function autofill(item, price) {
+      if(!isAdmin) return; // Only admin can add orders.
+      let input = document.getElementById('orderInput');
+      if (input.value.trim() !== '') {
+        input.value += " + " + item;
+        let currentPrice = parseFloat(input.getAttribute("data-price")) || 0;
+        input.setAttribute("data-price", currentPrice + price);
+      } else {
+        input.value = item;
+        input.setAttribute("data-price", price);
+      }
+    }
+    
+    // Append custom items without price.
+    function autofillCustom(item) {
+      if(!isAdmin) return;
+      let input = document.getElementById('orderInput');
+      if (input.value.trim() !== '') {
+        input.value += " + " + item;
+      } else {
+        input.value = item;
+      }
+      input.removeAttribute("data-price");
+    }
+    
+    // Append a meal option.
+    function addMeal() {
+      if(!isAdmin) return;
+      let input = document.getElementById('orderInput');
+      if (input.value.trim() !== '') {
+        input.value += " + Meal 🍟🥤";
+        let current = parseFloat(input.getAttribute("data-price")) || 0;
+        input.setAttribute("data-price", current + 2.99);
+      } else {
+        alert("Enter an order first before adding a meal!");
+      }
+    }
+    
+    // Add an order (only when admin is logged in); orders are posted to the backend.
+    async function addOrder() {
+      if(!isAdmin) {
+        alert("Admin login required to add orders.");
+        return;
+      }
+      let orderInput = document.getElementById('orderInput');
+      let price = parseFloat(orderInput.getAttribute("data-price")) || 0;
+    
+      if (orderInput.value.trim() === '') {
+        alert("Order cannot be empty!");
+        return;
+      }
+    
+      let order = { id: orderCounter++, item: orderInput.value, price };
+    
+      localStorage.setItem('orderCounter', orderCounter);
+    
+      try {
+        let response = await fetch(`${backendURL}/orders`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(order)
+        });
+    
+        if (!response.ok) {
+          throw new Error("Failed to add order.");
         }
-
-        function autofillCustom(item) {
-            document.getElementById('orderInput').value = item;
-            document.getElementById('orderInput').removeAttribute("data-price");
-        }
-
-        function addMeal() {
-            let input = document.getElementById('orderInput');
-            if (input.value.trim() !== '') {
-                input.value += " + Meal 🍟🥤";
-                input.setAttribute("data-price", (parseFloat(input.getAttribute("data-price")) || 0) + 2.99);
-            } else {
-                alert("Enter an order first before adding a meal!");
-            }
-        }
-
-        async function addOrder() {
-            let orderInput = document.getElementById('orderInput');
-            let price = parseFloat(orderInput.getAttribute("data-price")) || 0;
-            
-            if (orderInput.value.trim() === '') {
-                alert("Order cannot be empty!");
-                return;
-            }
-
-            let order = { id: orderCounter++, item: orderInput.value, price };
-
-            localStorage.setItem('orderCounter', orderCounter);
-
-            try {
-                let response = await fetch(`${backendURL}/orders`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(order)
-                });
-
-                if (!response.ok) {
-                    throw new Error("Failed to add order.");
-                }
-
-                document.getElementById('lastOrderPrice').innerText = price.toFixed(2);
-                document.getElementById('referralButton').style.display = "inline-block"; 
-                
-                alert(`Order #${order.id} added successfully!`);
-                orderInput.value = '';
-                orderInput.removeAttribute("data-price");
-                fetchOrders();
-            } catch (error) {
-                alert(error.message);
-            }
-        }
-
-        async function fetchOrders() {
-            let response = await fetch(`${backendURL}/orders`);
-            let orders = await response.json();
-
-            let orderList = document.getElementById('orderList');
-            orderList.innerHTML = orders.map(order =>
-                `<li id="order-${order.id}">#${order.id} - ${order.item} (£${order.price.toFixed(2)}) 
-                <button onclick="deleteOrder(${order.id}, ${order.price})">❌</button></li>`
-            ).join('');
-        }
-
-        async function deleteOrder(id, price) {
-            await fetch(`${backendURL}/orders/${id}`, { method: "DELETE" });
-            totalPrice -= price;
-            document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
-            document.getElementById(`order-${id}`).style.opacity = "0"; // Smooth fade-out
-            setTimeout(() => fetchOrders(), 300); // Reload after fade-out
-        }
-
-        function applyReferral() {
-            let lastOrderPriceElement = document.getElementById('lastOrderPrice');
-            let lastOrderPrice = parseFloat(lastOrderPriceElement.innerText) || 0;
-
-            lastOrderPrice *= 0.9;
-            lastOrderPriceElement.innerText = lastOrderPrice.toFixed(2);
-            document.getElementById('referralButton').style.display = "none";  
-            alert("Referral code applied! 10% discount added.");
-        }
-
-        window.onload = fetchOrders;
-    </script>
+    
+        document.getElementById('lastOrderPrice').innerText = price.toFixed(2);
+        document.getElementById('referralButton').style.display = "inline-block"; 
+        alert(`Order #${order.id} added successfully!`);
+        orderInput.value = '';
+        orderInput.removeAttribute("data-price");
+        fetchOrders();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+    
+    // Fetch orders and display them. Only admins see delete buttons.
+    async function fetchOrders() {
+      try {
+        let response = await fetch(`${backendURL}/orders`);
+        let orders = await response.json();
+    
+        let orderList = document.getElementById('orderList');
+        orderList.innerHTML = orders.map(order =>
+          `<li id="order-${order.id}">#${order.id} - ${order.item} (£${order.price.toFixed(2)}) 
+          ${ isAdmin ? `<button onclick="deleteOrder(${order.id}, ${order.price})">❌</button>` : '' }
+          </li>`
+        ).join('');
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+      }
+    }
+    
+    async function deleteOrder(id, price) {
+      if(!isAdmin) return;
+      await fetch(`${backendURL}/orders/${id}`, { method: "DELETE" });
+      // Smoothly fade out the deleted order.
+      let orderElem = document.getElementById(`order-${id}`);
+      orderElem.style.opacity = "0";
+      setTimeout(() => fetchOrders(), 300);
+    }
+    
+    function applyReferral() {
+      let lastOrderPriceElement = document.getElementById('lastOrderPrice');
+      let lastOrderPrice = parseFloat(lastOrderPriceElement.innerText) || 0;
+    
+      lastOrderPrice *= 0.9;
+      lastOrderPriceElement.innerText = lastOrderPrice.toFixed(2);
+      document.getElementById('referralButton').style.display = "none";  
+      alert("Referral code applied! 10% discount added.");
+    }
+    
+    window.onload = fetchOrders;
+  </script>
 </body>
 </html>
-
-
-
-
-
-
