@@ -62,10 +62,6 @@
       flex-wrap: wrap;
       gap: 10px;
     }
-    .autofill-buttons, .autofill-buttons-extra {
-      /* These buttons update the price */
-      background-color: transparent;
-    }
     .autofill-buttons-extra button, .autofill-buttons button {
       background-color: #28a745;
     }
@@ -130,270 +126,280 @@
   </style>
 </head>
 <body>
-<div class="container">
-  <h2>🍔 BoroBurgers Order Management 🍟🥤</h2>
-  
-  <!-- Public Section -->
-  <div id="publicSection">
-    <ul id="orderList"></ul>
-    <div class="price-section">
-      <h4>Last Order Price: £<span id="lastOrderPrice">0.00</span></h4>
+  <div class="container">
+    <h2>🍔 BoroBurgers Order Management 🍟🥤</h2>
+    
+    <!-- Public Section -->
+    <div id="publicSection">
+      <ul id="orderList"></ul>
+      <div class="price-section">
+        <h4>Last Order Price: £<span id="lastOrderPrice">0.00</span></h4>
+      </div>
+      <button id="adminLoginButton" onclick="showAdminModal()">Admin Login</button>
     </div>
-    <button id="adminLoginButton" onclick="showAdminModal()">Admin Login</button>
+    
+    <!-- Admin Section -->
+    <div id="adminSection" style="display: none;">
+      <button onclick="logoutAdmin()">Logout Admin</button>
+      <h3>Admin Dashboard</h3>
+      <input type="text" id="orderInput" placeholder="Enter order details" />
+      <button onclick="addOrder()">Add Order</button>
+      
+      <div class="autofill-buttons">
+        <h4>🔥 Quick Fill Options:</h4>
+        <button onclick="autofill('The Classic', 5.99)">The Classic (£5.99)</button>
+        <button onclick="autofill('The Serbian Burger', 6.49)">The Serbian Burger (£6.49)</button>
+        <button onclick="autofill('The BigMak', 7.99)">The BigMak (£7.99)</button>
+        <button onclick="addMeal()">Add Meal 🍟🥤 (£2.99)</button>
+      </div>
+      
+      <div class="autofill-buttons-extra">
+        <h4>Add-ons:</h4>
+        <button onclick="autofill('Extra Lettuce', 0.75)">Extra Lettuce (£0.75)</button>
+        <button onclick="autofill('Extra Tomatoes', 0.75)">Extra Tomatoes (£0.75)</button>
+        <button onclick="autofill('Extra Caramelized Onions', 1.00)">Extra Caramelized Onions (£1.00)</button>
+        <button onclick="autofill('Extra Mayo', 0.50)">Extra Mayo (£0.50)</button>
+      </div>
+      
+      <div class="autofill-buttons-no-extra">
+        <h4>No Add-ons:</h4>
+        <button onclick="autofillCustom('No Lettuce')">No Lettuce</button>
+        <button onclick="autofillCustom('No Tomatoes')">No Tomatoes</button>
+        <button onclick="autofillCustom('No Caramelized Onions')">No Caramelized Onions</button>
+        <button onclick="autofillCustom('No Mayo')">No Mayo</button>
+      </div>
+      
+      <div class="discount-buttons">
+        <h4>Discount Options:</h4>
+        <button onclick="applyReferral()">Referral Code (10% Off)</button>
+        <button onclick="applyFamilyDiscount()">Friends &amp; Family (5% Off)</button>
+      </div>
+    </div>
   </div>
   
-  <!-- Admin Section -->
-  <div id="adminSection" style="display: none;">
-    <button onclick="logoutAdmin()">Logout Admin</button>
-    <h3>Admin Dashboard</h3>
-    <input type="text" id="orderInput" placeholder="Enter order details" />
-    <button onclick="addOrder()">Add Order</button>
-    
-    <div class="autofill-buttons">
-      <h4>🔥 Quick Fill Options:</h4>
-      <button onclick="autofill('The Classic', 5.99)">The Classic (£5.99)</button>
-      <button onclick="autofill('The Serbian Burger', 6.49)">The Serbian Burger (£6.49)</button>
-      <button onclick="autofill('The BigMak', 7.99)">The BigMak (£7.99)</button>
-      <button onclick="addMeal()">Add Meal 🍟🥤 (£2.99)</button>
-    </div>
-    
-    <div class="autofill-buttons-extra">
-      <h4>Add-ons:</h4>
-      <button onclick="autofill('Extra Lettuce', 0.75)">Extra Lettuce (£0.75)</button>
-      <button onclick="autofill('Extra Tomatoes', 0.75)">Extra Tomatoes (£0.75)</button>
-      <button onclick="autofill('Extra Caramelized Onions', 1.00)">Extra Caramelized Onions (£1.00)</button>
-      <button onclick="autofill('Extra Mayo', 0.50)">Extra Mayo (£0.50)</button>
-    </div>
-    
-    <div class="autofill-buttons-no-extra">
-      <h4>No Add-ons:</h4>
-      <button onclick="autofillCustom('No Lettuce')">No Lettuce</button>
-      <button onclick="autofillCustom('No Tomatoes')">No Tomatoes</button>
-      <button onclick="autofillCustom('No Caramelized Onions')">No Caramelized Onions</button>
-      <button onclick="autofillCustom('No Mayo')">No Mayo</button>
-    </div>
-    
-    <div class="discount-buttons">
-      <h4>Discount Options:</h4>
-      <button onclick="applyReferral()">Referral Code (10% Off)</button>
-      <button onclick="applyFamilyDiscount()">Friends & Family (5% Off)</button>
+  <!-- Admin Login Modal -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal">
+      <h3>Admin Login</h3>
+      <input type="text" id="adminUsername" placeholder="Username" />
+      <input type="password" id="adminPassword" placeholder="Password" />
+      <div style="display: flex; justify-content: center;">
+        <button onclick="adminLogin()">Login</button>
+        <button onclick="hideAdminModal()">Cancel</button>
+      </div>
     </div>
   </div>
-</div>
-
-<!-- Admin Login Modal -->
-<div class="modal-overlay" id="adminModal">
-  <div class="modal">
-    <h3>Admin Login</h3>
-    <input type="text" id="adminUsername" placeholder="Username" />
-    <input type="password" id="adminPassword" placeholder="Password" />
-    <div style="display: flex; justify-content: center;">
-      <button onclick="adminLogin()">Login</button>
-      <button onclick="hideAdminModal()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<div id="notification"></div>
-
-<script>
-  // Global variables and defaults
-  const backendURL = "https://boroburgersorders.onrender.com";
-  let orderCounter = localStorage.getItem('orderCounter') || 1;
-  // Read admin state from sessionStorage
-  let isAdmin = sessionStorage.getItem('adminLoggedIn') === "true";
   
-  // On load, show admin section if logged in
-  if (isAdmin) {
-    document.getElementById('adminSection').style.display = "block";
-    document.getElementById('adminLoginButton').style.display = "none";
-  }
+  <div id="notification"></div>
   
-  // Notification helper function
-  function showNotification(message, type = "success") {
-    const notification = document.getElementById('notification');
-    notification.textContent = message;
-    notification.className = (type === "error") ? "error" : "";
-    notification.style.opacity = "1";
-    setTimeout(() => { notification.style.opacity = "0"; }, 2500);
-  }
-  
-  // ADMIN LOGIN FUNCTIONS
-  function showAdminModal() {
-    document.getElementById('adminModal').style.display = 'flex';
-  }
-  
-  function hideAdminModal() {
-    document.getElementById('adminModal').style.display = 'none';
-  }
-  
-  // Dummy admin credentials for demonstration
-  const ADMIN_USERNAME = "admin";
-  const ADMIN_PASSWORD = "admin123";
-  
-  function adminLogin() {
-    const username = document.getElementById('adminUsername').value;
-    const password = document.getElementById('adminPassword').value;
+  <script>
+    const backendURL = "https://boroburgersorders.onrender.com";
+    let orderCounter = localStorage.getItem('orderCounter') || 1;
+    let isAdmin = sessionStorage.getItem('adminLoggedIn') === "true";
     
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      sessionStorage.setItem('adminLoggedIn', "true");
-      isAdmin = true;
+    // Show admin section if already logged in
+    if (isAdmin) {
       document.getElementById('adminSection').style.display = "block";
       document.getElementById('adminLoginButton').style.display = "none";
-      hideAdminModal();
-      showNotification("Admin logged in successfully!");
-    } else {
-      showNotification("Invalid credentials!", "error");
-    }
-  }
-  
-  function logoutAdmin() {
-    sessionStorage.removeItem('adminLoggedIn');
-    isAdmin = false;
-    document.getElementById('adminSection').style.display = "none";
-    document.getElementById('adminLoginButton').style.display = "inline-block";
-    showNotification("Admin logged out.");
-  }
-  
-  // ORDER MODIFICATION FUNCTIONS
-  // Append text and update price if applicable
-  function autofill(item, price) {
-    if (!isAdmin) return;
-    const input = document.getElementById('orderInput');
-    // Use "0" if data-price attribute is not set
-    const currentPrice = parseFloat(input.getAttribute("data-price") || "0");
-    if (input.value.trim()) {
-      input.value += " + " + item;
-      input.setAttribute("data-price", (currentPrice + price).toFixed(2));
-    } else {
-      input.value = item;
-      input.setAttribute("data-price", price);
-    }
-  }
-  
-  // Append text only without affecting the current price
-  function autofillCustom(item) {
-    if (!isAdmin) return;
-    const input = document.getElementById('orderInput');
-    if (input.value.trim()) {
-      input.value += " + " + item;
-    } else {
-      input.value = item;
-    }
-  }
-  
-  // Append meal option which updates the price
-  function addMeal() {
-    if (!isAdmin) return;
-    const input = document.getElementById('orderInput');
-    const current = parseFloat(input.getAttribute("data-price") || "0");
-    if (input.value.trim()) {
-      input.value += " + Meal 🍟🥤";
-      input.setAttribute("data-price", (current + 2.99).toFixed(2));
-    } else {
-      showNotification("Enter an order first before adding a meal!", "error");
-    }
-  }
-  
-  // Add order: submits the order, resets the input, and updates the order list
-  async function addOrder() {
-    if (!isAdmin) {
-      console.error("Admin login required to add orders.");
-      return;
-    }
-    const orderInput = document.getElementById('orderInput');
-    let price = parseFloat(orderInput.getAttribute("data-price") || "0");
-    
-    if (!orderInput.value.trim()) {
-      showNotification("Order cannot be empty!", "error");
-      return;
     }
     
-    const order = { id: orderCounter++, item: orderInput.value, price };
-    localStorage.setItem('orderCounter', orderCounter);
+    // Notification helper: displays a message briefly
+    function showNotification(message, type = "success") {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = (type === "error") ? "error" : "";
+      notification.style.opacity = "1";
+      setTimeout(() => { notification.style.opacity = "0"; }, 2500);
+    }
     
-    try {
-      // Post to backend
-      const response = await fetch(`${backendURL}/orders`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(order)
-      });
+    // ADMIN LOGIN FUNCTIONS
+    function showAdminModal() {
+      document.getElementById('adminModal').style.display = 'flex';
+    }
+    
+    function hideAdminModal() {
+      document.getElementById('adminModal').style.display = 'none';
+    }
+    
+    // Dummy admin credentials for demonstration
+    const ADMIN_USERNAME = "admin";
+    const ADMIN_PASSWORD = "admin123";
+    
+    function adminLogin() {
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
       
-      if (!response.ok) {
-        throw new Error("Failed to add order.");
+      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        sessionStorage.setItem('adminLoggedIn', "true");
+        isAdmin = true;
+        document.getElementById('adminSection').style.display = "block";
+        document.getElementById('adminLoginButton').style.display = "none";
+        hideAdminModal();
+        showNotification("Admin logged in successfully!");
+      } else {
+        showNotification("Invalid credentials!", "error");
+      }
+    }
+    
+    function logoutAdmin() {
+      sessionStorage.removeItem('adminLoggedIn');
+      isAdmin = false;
+      document.getElementById('adminSection').style.display = "none";
+      document.getElementById('adminLoginButton').style.display = "inline-block";
+      showNotification("Admin logged out.");
+    }
+    
+    // ORDER MODIFICATION FUNCTIONS
+    // Append text and update price if applicable
+    function autofill(item, price) {
+      if (!isAdmin) return;
+      const input = document.getElementById('orderInput');
+      const currentPrice = parseFloat(input.getAttribute("data-price") || "0");
+      if (input.value.trim()) {
+        input.value += " + " + item;
+        input.setAttribute("data-price", (currentPrice + price).toFixed(2));
+      } else {
+        input.value = item;
+        input.setAttribute("data-price", price);
+      }
+    }
+    
+    // Append text only (without altering the price)
+    function autofillCustom(item) {
+      if (!isAdmin) return;
+      const input = document.getElementById('orderInput');
+      if (input.value.trim()) {
+        input.value += " + " + item;
+      } else {
+        input.value = item;
+      }
+    }
+    
+    // Append a meal option (updates price)
+    function addMeal() {
+      if (!isAdmin) return;
+      const input = document.getElementById('orderInput');
+      const current = parseFloat(input.getAttribute("data-price") || "0");
+      if (input.value.trim()) {
+        input.value += " + Meal 🍟🥤";
+        input.setAttribute("data-price", (current + 2.99).toFixed(2));
+      } else {
+        showNotification("Enter an order first before adding a meal!", "error");
+      }
+    }
+    
+    // ADD ORDER: submits the order, resets the form, and updates the order list
+    async function addOrder() {
+      if (!isAdmin) {
+        console.error("Admin login required to add orders.");
+        return;
       }
       
-      // Update last order price display
-      document.getElementById('lastOrderPrice').innerText = price.toFixed(2);
-      showNotification(`Order #${order.id} added successfully!`);
-      orderInput.value = "";
-      orderInput.removeAttribute("data-price");
+      const orderInput = document.getElementById('orderInput');
+      let price = parseFloat(orderInput.getAttribute("data-price") || "0");
+      
+      if (!orderInput.value.trim()) {
+        showNotification("Order cannot be empty!", "error");
+        return;
+      }
+      
+      const order = { id: orderCounter++, item: orderInput.value, price };
+      localStorage.setItem('orderCounter', orderCounter);
+      
+      try {
+        const response = await fetch(`${backendURL}/orders`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(order)
+        });
+        if (!response.ok) {
+          throw new Error("Failed to add order.");
+        }
+        document.getElementById('lastOrderPrice').innerText = price.toFixed(2);
+        showNotification(`Order #${order.id} added successfully!`);
+        orderInput.value = "";
+        orderInput.removeAttribute("data-price");
+        fetchOrders();
+      } catch (error) {
+        console.error(error.message);
+        showNotification("Error adding order!", "error");
+      }
+    }
+    
+    // FETCH ORDERS: retrieves orders from the backend and displays them
+    async function fetchOrders() {
+      try {
+        const response = await fetch(`${backendURL}/orders`);
+        const orders = await response.json();
+        const orderList = document.getElementById('orderList');
+        orderList.innerHTML = orders.map(order => `
+          <li id="order-${order.id}">
+            #${order.id} - ${order.item} (£${order.price.toFixed(2)})
+            ${ isAdmin ? `<button onclick="deleteOrder(${order.id})">❌</button>` : '' }
+          </li>
+        `).join('');
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+      }
+    }
+    
+    // DELETE ORDER: deletes a given order (admin only)
+    async function deleteOrder(id) {
+      if (!isAdmin) return;
+      try {
+        await fetch(`${backendURL}/orders/${id}`, { method: "DELETE" });
+        const orderElem = document.getElementById(`order-${id}`);
+        orderElem.style.opacity = "0";
+        setTimeout(() => { fetchOrders(); }, 300);
+        showNotification(`Order #${id} deleted successfully!`);
+      } catch (error) {
+        console.error(error);
+        showNotification("Error deleting order!", "error");
+      }
+    }
+    
+    // DISCOUNT FUNCTIONS: Append discount label and update the stored price, only if there's an order
+    function applyReferral() {
+      if (!isAdmin) return;
+      const input = document.getElementById('orderInput');
+      if (!input.value.trim()) {
+        showNotification("Enter an order item before applying discount.", "error");
+        return;
+      }
+      let currentPrice = parseFloat(input.getAttribute("data-price") || "0");
+      if (currentPrice <= 0) {
+        showNotification("No valid price to discount.", "error");
+        return;
+      }
+      let discountAmount = currentPrice * 0.1;
+      currentPrice -= discountAmount;
+      input.value += " + Referral Code (10% Off)";
+      input.setAttribute("data-price", currentPrice.toFixed(2));
+      showNotification("10% referral discount applied!");
+    }
+    
+    function applyFamilyDiscount() {
+      if (!isAdmin) return;
+      const input = document.getElementById('orderInput');
+      if (!input.value.trim()) {
+        showNotification("Enter an order item before applying discount.", "error");
+        return;
+      }
+      let currentPrice = parseFloat(input.getAttribute("data-price") || "0");
+      if (currentPrice <= 0) {
+        showNotification("No valid price to discount.", "error");
+        return;
+      }
+      let discountAmount = currentPrice * 0.05;
+      currentPrice -= discountAmount;
+      input.value += " + Friends & Family (5% Off)";
+      input.setAttribute("data-price", currentPrice.toFixed(2));
+      showNotification("5% friends & family discount applied!");
+    }
+    
+    window.onload = function() {
       fetchOrders();
-    } catch (error) {
-      console.error(error.message);
-      showNotification("Error adding order!", "error");
-    }
-  }
-  
-  // Fetch order list from backend and display in public section.
-  async function fetchOrders() {
-    try {
-      const response = await fetch(`${backendURL}/orders`);
-      const orders = await response.json();
-      const orderList = document.getElementById('orderList');
-      orderList.innerHTML = orders.map(order => `
-        <li id="order-${order.id}">
-          #${order.id} - ${order.item} (£${order.price.toFixed(2)})
-          ${ isAdmin ? `<button onclick="deleteOrder(${order.id})">❌</button>` : '' }
-        </li>
-      `).join('');
-    } catch (err) {
-      console.error("Error fetching orders:", err);
-    }
-  }
-  
-  // Delete an order
-  async function deleteOrder(id) {
-    if (!isAdmin) return;
-    try {
-      await fetch(`${backendURL}/orders/${id}`, { method: "DELETE" });
-      const orderElem = document.getElementById(`order-${id}`);
-      orderElem.style.opacity = "0";
-      setTimeout(() => fetchOrders(), 300);
-      showNotification(`Order #${id} deleted successfully!`);
-    } catch (error) {
-      console.error(error);
-      showNotification("Error deleting order!", "error");
-    }
-  }
-  
-  // DISCOUNT FUNCTIONS (applied to order details)
-  function applyReferral() {
-    if (!isAdmin) return;
-    const input = document.getElementById('orderInput');
-    let currentPrice = parseFloat(input.getAttribute("data-price") || "0");
-    let discountAmount = currentPrice * 0.1;
-    currentPrice -= discountAmount;
-    input.value += " + Referral Code (10% Off)";
-    input.setAttribute("data-price", currentPrice.toFixed(2));
-    showNotification("10% referral discount applied!");
-  }
-  
-  function applyFamilyDiscount() {
-    if (!isAdmin) return;
-    const input = document.getElementById('orderInput');
-    let currentPrice = parseFloat(input.getAttribute("data-price") || "0");
-    let discountAmount = currentPrice * 0.05;
-    currentPrice -= discountAmount;
-    input.value += " + Friends & Family (5% Off)";
-    input.setAttribute("data-price", currentPrice.toFixed(2));
-    showNotification("5% friends & family discount applied!");
-  }
-  
-  window.onload = function() {
-    fetchOrders();
-  }
-</script>
+    };
+  </script>
 </body>
 </html>
