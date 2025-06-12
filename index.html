@@ -1068,21 +1068,7 @@
     }
 
     async function deleteOrder(id, price) {
-      if (!isAdmin) return;
-      
-      if (!confirm(`Are you sure you want to delete Order #${id}?`)) {
-        return;
-      }
-      
-      try {
-        const response = await fetch(`${backendURL}/orders/${id}`, { 
-          method: "DELETE" 
-        });
-        
-        if (!response.ok) {
-          throw new Error("Failed to delete order");
-        }
-        
+    
         const orderElement = document.getElementById(`order-${id}`);
         if (orderElement) {
           orderElement.style.transform = 'translateX(100%)';
@@ -1092,8 +1078,7 @@
             await fetchOrders();
           }, 300);
         }
-        
-        showNotification(`🗑️ Order #${id} deleted successfully!`);
+  
         
       } catch (error) {
         console.error("Error deleting order:", error);
