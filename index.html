@@ -102,14 +102,21 @@
     .price-section {
       margin-top: 20px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
     }
-    #referralButton {
-      background-color: #dc3545;
-      display: none;
+    .price-section h4 {
+      margin-bottom: 10px;
     }
-    #referralButton:hover {
+    .discount-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    #referralButton, #familyDiscountButton {
+      background-color: #dc3545;
+    }
+    #referralButton:hover, #familyDiscountButton:hover {
       background-color: #c82333;
     }
     /* Notification Bar */
@@ -176,7 +183,10 @@
       <ul id="orderList"></ul>
       <div class="price-section">
         <h4>Last Order Price: £<span id="lastOrderPrice">0.00</span></h4>
-        <button id="referralButton" onclick="applyReferral()">Referral Code (10% Off)</button>
+        <div class="discount-buttons">
+          <button id="referralButton" onclick="applyReferral()">Referral Code (10% Off)</button>
+          <button id="familyDiscountButton" onclick="applyFamilyDiscount()">Family & Friends (5% Off)</button>
+        </div>
       </div>
       <button id="adminLoginButton" onclick="showAdminModal()">Admin Login</button>
     </div>
@@ -191,20 +201,16 @@
       <div class="autofill-buttons">
         <h4>🔥 Quick Fill Options:</h4>
         <button onclick="autofill('The Classic', 5.99)">The Classic (£5.99)</button>
-        <button onclick="autofill('The Serbian Burger', 6.99)">The Serbian Burger (£6.99)</button>
-        <button onclick="autofill('The BigMak', 8.99)">The BigMak (£8.99)</button>
-        <button onclick="autofill('Shredded Lettuce', 0.75)">Shredded Lettuce (£0.75)</button>
-        <button onclick="autofill('Tomatoes, 0.75)">Tomatoes (£0.75)</button>
-        <button onclick="autofill('Caramalized Onions', 1.00)">Caramalized Onions (£1.00)</button>
-        <button onclick="autofill('Spicy Mayo Sauce', 0.50)">Spicy Mayo Sauce (£0.50)</button>
-        <button onclick="addMeal()">Add Meal 🍟🥤 (£2.76)</button>
+        <button onclick="autofill('The Serbian Burger', 6.49)">The Serbian Burger (£6.49)</button>
+        <button onclick="autofill('The BigMak', 7.99)">The BigMak (£7.99)</button>
+        <button onclick="addMeal()">Add Meal 🍟🥤 (£2.99)</button>
       </div>
       <div class="custom-autofill">
         <h4>✨ Extra Custom Buttons (No Price)</h4>
-        <button onclick="autofillCustom('No Lettuce')">No Lettuce</button>
-        <button onclick="autofillCustom('No Tomatoes')">No Tomatoes</button>
-        <button onclick="autofillCustom('No Caramalized Onions')">No Caramalized Onions</button>
-        <button onclick="autofillCustom('No Sauce')">No Sauce</button>
+        <button onclick="autofillCustom('Custom Item 1')">Custom 1</button>
+        <button onclick="autofillCustom('Custom Item 2')">Custom 2</button>
+        <button onclick="autofillCustom('Custom Item 3')">Custom 3</button>
+        <button onclick="autofillCustom('Custom Item 4')">Custom 4</button>
       </div>
     </div>
   </div>
@@ -279,9 +285,9 @@
       showNotification("Admin logged out.");
     }
 
-    // Append quick fill values; concatenates items and sums prices.
+    // Append quick fill values (sums price if applicable)
     function autofill(item, price) {
-      if (!isAdmin) return;
+      if (!isAdmin) return; // Only admin can add orders.
       let input = document.getElementById('orderInput');
       if (input.value.trim()) {
         input.value += " + " + item;
@@ -293,6 +299,7 @@
       }
     }
     
+    // Custom autofill: append item text without modifying the price.
     function autofillCustom(item) {
       if (!isAdmin) return;
       let input = document.getElementById('orderInput');
@@ -301,7 +308,7 @@
       } else {
         input.value = item;
       }
-      input.removeAttribute("data-price");
+      // Do NOT remove or change any existing data-price attribute.
     }
     
     function addMeal() {
@@ -345,8 +352,10 @@
           throw new Error("Failed to add order.");
         }
     
+        // Update the displayed price and show both discount options.
         document.getElementById('lastOrderPrice').innerText = price.toFixed(2);
         document.getElementById('referralButton').style.display = "inline-block";
+        document.getElementById('familyDiscountButton').style.display = "inline-block";
         showNotification(`Order #${order.id} added successfully!`);
         orderInput.value = "";
         orderInput.removeAttribute("data-price");
@@ -366,34 +375,4 @@
         orderList.innerHTML = orders.map(order => `
           <li id="order-${order.id}">
             #${order.id} - ${order.item} (£${order.price.toFixed(2)})
-            ${ isAdmin ? `<button onclick="deleteOrder(${order.id}, ${order.price})">❌</button>` : '' }
-          </li>
-        `).join('');
-      } catch (err) {
-        console.error("Error fetching orders:", err);
-      }
-    }
-    
-    async function deleteOrder(id, price) {
-      if (!isAdmin) return;
-      await fetch(`${backendURL}/orders/${id}`, { method: "DELETE" });
-      let orderElem = document.getElementById(`order-${id}`);
-      orderElem.style.opacity = "0";
-      setTimeout(() => fetchOrders(), 300);
-      showNotification(`Order #${id} deleted successfully!`);
-    }
-    
-    function applyReferral() {
-      let lastOrderPriceElement = document.getElementById('lastOrderPrice');
-      let price = parseFloat(lastOrderPriceElement.innerText) || 0;
-      let discount = price * 0.1;
-      price = price - discount;
-      lastOrderPriceElement.innerText = price.toFixed(2);
-      document.getElementById('referralButton').style.display = "none";
-      showNotification("10% discount applied!");
-    }
-    
-    window.onload = fetchOrders;
-  </script>
-</body>
-</html>
+            ${ isAdmin ? `<button onclick="
