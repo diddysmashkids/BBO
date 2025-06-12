@@ -108,6 +108,20 @@
     .autofill-buttons-no-extra button:hover {
       background-color: #0056b3;
     }
+    /* Discount Options */
+    .discount-buttons {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .discount-buttons button {
+      background-color: #dc3545;
+      font-size: 14px;
+    }
+    .discount-buttons button:hover {
+      background-color: #c82333;
+    }
     /* Order List Styling */
     ul {
       list-style-type: none;
@@ -212,9 +226,9 @@
       <div class="autofill-buttons">
         <h4>🔥 Quick Fill Options:</h4>
         <button onclick="autofill('The Classic', 5.99)">The Classic (£5.99)</button>
-        <button onclick="autofill('The Serbian Burger', 6.99)">The Serbian Burger (£6.99)</button>
-        <button onclick="autofill('The BigMak', 8.99)">The BigMak (£8.99)</button>
-        <button onclick="addMeal()">Add Meal 🍟🥤 (£2.76)</button>
+        <button onclick="autofill('The Serbian Burger', 6.49)">The Serbian Burger (£6.49)</button>
+        <button onclick="autofill('The BigMak', 7.99)">The BigMak (£7.99)</button>
+        <button onclick="addMeal()">Add Meal 🍟🥤 (£2.99)</button>
       </div>
 
       <!-- Extra Custom Buttons (append text only, no price update) -->
@@ -242,6 +256,13 @@
         <button onclick="autofillCustom('No Tomatoes')">No Tomatoes</button>
         <button onclick="autofillCustom('No Caramelized Onions')">No Caramelized Onions</button>
         <button onclick="autofillCustom('No Mayo')">No Mayo</button>
+      </div>
+
+      <!-- Discount Options (only for admin) -->
+      <div class="discount-buttons">
+        <h4>Discount Options:</h4>
+        <button onclick="applyReferral()">Referral Code (10% Off)</button>
+        <button onclick="applyFamilyDiscount()">Friends &amp; Family (5% Off)</button>
       </div>
     </div>
   </div>
@@ -316,7 +337,7 @@
     function autofill(item, price) {
       if (!isAdmin) return;
       const input = document.getElementById('orderInput');
-      // Use a default fallback "0" if no data-price exists yet.
+      // Use default "0" if data-price is not set
       const currentPrice = parseFloat(input.getAttribute("data-price") || "0");
       if (input.value.trim()) {
         input.value += " + " + item;
@@ -358,7 +379,7 @@
         return;
       }
       const orderInput = document.getElementById('orderInput');
-      // Use "0" fallback in parsing
+      // Default to "0" if data-price is missing
       let price = parseFloat(orderInput.getAttribute("data-price") || "0");
       if (!orderInput.value.trim()) {
         showNotification("Order cannot be empty!", "error");
@@ -409,6 +430,26 @@
       orderElem.style.opacity = "0";
       setTimeout(() => fetchOrders(), 300);
       showNotification(`Order #${id} deleted successfully!`);
+    }
+
+    // Apply a 10% referral discount (admin only).
+    function applyReferral() {
+      if (!isAdmin) return;
+      const priceElem = document.getElementById('lastOrderPrice');
+      let price = parseFloat(priceElem.innerText) || 0;
+      price = price - (price * 0.1);
+      priceElem.innerText = price.toFixed(2);
+      showNotification("10% referral discount applied!");
+    }
+
+    // Apply a 5% friends & family discount (admin only).
+    function applyFamilyDiscount() {
+      if (!isAdmin) return;
+      const priceElem = document.getElementById('lastOrderPrice');
+      let price = parseFloat(priceElem.innerText) || 0;
+      price = price - (price * 0.05);
+      priceElem.innerText = price.toFixed(2);
+      showNotification("5% friends & family discount applied!");
     }
 
     window.onload = fetchOrders;
