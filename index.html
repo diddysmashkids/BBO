@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>BoroBurgers Orders - Dashboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     /* Global Styles */
     body {
@@ -66,7 +67,7 @@
       width: 100%;
       box-sizing: border-box;
     }
-    /* Section Styles */
+    /* Section and Button Group Styles */
     .section {
       margin-bottom: 20px;
     }
@@ -92,7 +93,7 @@
       text-align: center;
       margin-top: 20px;
     }
-    /* Notification */
+    /* Notification Styling */
     #notification {
       position: fixed;
       top: 20px;
@@ -115,30 +116,26 @@
     <h2>🍔 BoroBurgers Order Management 🍟🥤</h2>
     
     <!-- Secure Admin Login Form -->
-    <!-- This login form posts to a secure (HTTPS) endpoint. -->
+    <!-- Simply posts to your secure HTTPS endpoint -->
     <div class="login-form section" id="adminLoginArea">
       <h3>Admin Login</h3>
-      <form action="https://jarned-rs.github.io/BoroburgersOrders/dashboard" method="POST">
+      <form action="https://yourdomain.com/login" method="POST">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-
+        <input type="text" id="username" name="username" required />
+  
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
+        <input type="password" id="password" name="password" required />
+  
         <button type="submit">Login</button>
       </form>
-      <p>
-        <!-- On successful login, your server should redirect or serve 
-             the admin dashboard. -->
-      </p>
     </div>
     
     <!-- Admin Dashboard -->
-    <!-- Typically, server-side code would conditionally render this block (or redirect after login) -->
+    <!-- In production, your server should render or redirect here on successful login -->
     <div class="section" id="adminSection" style="display: none;">
       <h3>Admin Dashboard</h3>
       <!-- Order Input Area -->
-      <input type="text" id="orderInput" placeholder="Enter order details">
+      <input type="text" id="orderInput" placeholder="Enter order details" />
       <button onclick="addOrder()">Add Order</button>
       
       <!-- Quick Fill Options -->
@@ -191,10 +188,10 @@
   <!-- Notification -->
   <div id="notification"></div>
   
-  <!-- JavaScript for Order Management (demonstration purposes only) -->
+  <!-- JavaScript for Order Management -->
   <script>
-    // The following functions are for demonstration.
-    // In production, access to the admin dashboard should be controlled via secure server-side sessions.
+    // This file contains functions for order management.
+    // In a production application, admin access should be confirmed on the server.
   
     function showNotification(message, type = "success") {
       const notification = document.getElementById('notification');
@@ -234,7 +231,7 @@
         input.value += " + Meal 🍟🥤";
         input.setAttribute("data-price", (currentPrice + 2.99).toFixed(2));
       } else {
-        showNotification("Enter an order first before adding a meal!", "error");
+        showNotification("Enter an order before adding a meal!", "error");
       }
     }
   
@@ -247,13 +244,10 @@
         return;
       }
       const order = { id: orderCounter++, item: orderInput.value, price: price };
-  
-      // For demonstration, add order to the list directly.
       const orderList = document.getElementById('orderList');
       const newOrder = document.createElement('li');
       newOrder.textContent = `#${order.id} - ${order.item} (£${price.toFixed(2)})`;
       orderList.appendChild(newOrder);
-  
       document.getElementById('lastOrderPrice').innerText = price.toFixed(2);
       showNotification(`Order #${order.id} added successfully!`);
       orderInput.value = "";
