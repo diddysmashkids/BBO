@@ -7,7 +7,9 @@
   <!-- Google Fonts for a professional look -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
+    rel="stylesheet" />
   <style>
     /* Global Styles */
     body {
@@ -26,19 +28,13 @@
       width: 100%;
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
       padding: 30px;
       animation: fadeIn 0.6s ease-in-out;
     }
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     h2, h3, h4 {
       color: #007bff;
@@ -61,20 +57,58 @@
       background-color: #007bff;
       color: #fff;
       border: none;
-      box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.4);
+      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
     }
     button:hover {
       background-color: #0056b3;
       transform: scale(1.02);
     }
-    .autofill-buttons button {
+    /* Quick Fill & Custom Autofill Buttons */
+    .autofill-buttons,
+    .custom-autofill {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .autofill-buttons button,
+    .custom-autofill button {
       background-color: #28a745;
       font-size: 14px;
-      margin: 6px;
     }
-    .autofill-buttons button:hover {
+    .autofill-buttons button:hover,
+    .custom-autofill button:hover {
       background-color: #218838;
     }
+    /* Extra Add-on Buttons (update price) */
+    .autofill-buttons-extra {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .autofill-buttons-extra button {
+      background-color: #28a745;
+      font-size: 14px;
+    }
+    .autofill-buttons-extra button:hover {
+      background-color: #218838;
+    }
+    /* No Add-on Buttons (append text only, no change in price) */
+    .autofill-buttons-no-extra {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .autofill-buttons-no-extra button {
+      background-color: #007bff;
+      font-size: 14px;
+    }
+    .autofill-buttons-no-extra button:hover {
+      background-color: #0056b3;
+    }
+    /* Order list styling */
     ul {
       list-style-type: none;
       padding: 0;
@@ -90,306 +124,9 @@
       animation: fadeInOrder 0.5s ease-in-out;
     }
     @keyframes fadeInOrder {
-      from {
-        opacity: 0;
-        transform: scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
     }
+    /* Price Section */
     .price-section {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    #referralButton {
-      background-color: #dc3545;
-      display: none;
-    }
-    #referralButton:hover {
-      background-color: #c82333;
-    }
-    /* Notification Bar */
-    #notification {
-      position: absolute;
-      top: -60px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #28a745;
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 8px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease-in-out;
-    }
-    #notification.error {
-      background: #dc3545;
-    }
-    /* Admin Login Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .modal {
-      background: #fff;
-      border-radius: 8px;
-      padding: 30px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0px 6px 20px rgba(0,0,0,0.3);
-      animation: slideIn 0.4s ease-in-out;
-    }
-    @keyframes slideIn {
-      from { transform: translateY(-20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    .modal input {
-      width: calc(100% - 30px);
-      margin: 10px 0;
-    }
-    .modal button {
-      width: calc(50% - 20px);
-      margin: 10px;
-    }
-  </style>
-</head>
-<body>
-  <!-- Notification Bar -->
-  <div id="notification"></div>
-
-  <div class="container">
-    <h2>🍔 BoroBurgers Order Management 🍟🥤</h2>
-    <!-- Public Section: Orders list view -->
-    <div id="publicSection">
-      <ul id="orderList"></ul>
-      <div class="price-section">
-        <h4>Last Order Price: £<span id="lastOrderPrice">0.00</span></h4>
-        <button id="referralButton" onclick="applyReferral()">Referral Code (10% Off)</button>
-      </div>
-      <button id="adminLoginButton" onclick="showAdminModal()">Admin Login</button>
-    </div>
-
-    <!-- Admin Section (visible only after login) -->
-    <div id="adminSection" style="display:none;">
-      <button onclick="logoutAdmin()">Logout Admin</button>
-      <h3>Admin Dashboard</h3>
-      <input type="text" id="orderInput" placeholder="Enter order details" />
-      <button onclick="addOrder()">Add Order</button>
-
-      <div class="autofill-buttons">
-        <h4>🔥 Quick Fill Options:</h4>
-        <button onclick="autofill('The Classic', 5.99)">The Classic (£5.99)</button>
-        <button onclick="autofill('The Serbian Burger', 6.49)">The Serbian Burger (£6.49)</button>
-        <button onclick="autofill('The BigMak', 7.99)">The BigMak (£7.99)</button>
-        <button onclick="addMeal()">Add Meal 🍟🥤 (£2.99)</button>
-      </div>
-      <div class="custom-autofill">
-        <h4>✨ Extra Custom Buttons (No Price)</h4>
-        <button onclick="autofillCustom('Custom Item 1')">Custom 1</button>
-        <button onclick="autofillCustom('Custom Item 2')">Custom 2</button>
-        <button onclick="autofillCustom('Custom Item 3')">Custom 3</button>
-        <button onclick="autofillCustom('Custom Item 4')">Custom 4</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Admin Login Modal -->
-  <div class="modal-overlay" id="adminModal">
-    <div class="modal">
-      <h3>Admin Login</h3>
-      <input type="text" id="adminUsername" placeholder="Username" />
-      <input type="password" id="adminPassword" placeholder="Password" />
-      <div style="display: flex; justify-content: center;">
-        <button onclick="adminLogin()">Login</button>
-        <button onclick="hideAdminModal()">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const backendURL = "https://boroburgersorders.onrender.com";
-    let orderCounter = localStorage.getItem('orderCounter') || 1;
-    let isAdmin = sessionStorage.getItem('adminLoggedIn') === "true";
-
-    // Display the admin section if already logged in
-    if (isAdmin) {
-      document.getElementById('adminSection').style.display = "block";
-      document.getElementById('adminLoginButton').style.display = "none";
-    }
-
-    // Notification helper
-    function showNotification(message, type = "success") {
-      const notification = document.getElementById('notification');
-      notification.textContent = message;
-      notification.className = (type === "error") ? "error" : "";
-      notification.style.opacity = "1";
-      setTimeout(() => {
-        notification.style.opacity = "0";
-      }, 2500);
-    }
-
-    // Admin modal functions
-    function showAdminModal() {
-      document.getElementById('adminModal').style.display = "flex";
-    }
-    function hideAdminModal() {
-      document.getElementById('adminModal').style.display = "none";
-    }
-
-    // Dummy admin credentials; in production, use secure server‑side authentication!
-    const ADMIN_USERNAME = "admin";
-    const ADMIN_PASSWORD = "admin123";
-    
-    function adminLogin() {
-      const username = document.getElementById('adminUsername').value;
-      const password = document.getElementById('adminPassword').value;
-      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-        sessionStorage.setItem('adminLoggedIn', "true");
-        isAdmin = true;
-        document.getElementById('adminSection').style.display = "block";
-        document.getElementById('adminLoginButton').style.display = "none";
-        hideAdminModal();
-        showNotification("Admin logged in successfully!");
-      } else {
-        showNotification("Invalid credentials!", "error");
-      }
-    }
-    
-    function logoutAdmin() {
-      sessionStorage.removeItem('adminLoggedIn');
-      isAdmin = false;
-      document.getElementById('adminSection').style.display = "none";
-      document.getElementById('adminLoginButton').style.display = "inline-block";
-      showNotification("Admin logged out.");
-    }
-
-    // Append quick fill values; concatenates items and sums prices.
-    function autofill(item, price) {
-      if (!isAdmin) return;
-      let input = document.getElementById('orderInput');
-      if (input.value.trim()) {
-        input.value += " + " + item;
-        let currentPrice = parseFloat(input.getAttribute("data-price")) || 0;
-        input.setAttribute("data-price", currentPrice + price);
-      } else {
-        input.value = item;
-        input.setAttribute("data-price", price);
-      }
-    }
-    
-    function autofillCustom(item) {
-      if (!isAdmin) return;
-      let input = document.getElementById('orderInput');
-      if (input.value.trim()) {
-        input.value += " + " + item;
-      } else {
-        input.value = item;
-      }
-      input.removeAttribute("data-price");
-    }
-    
-    function addMeal() {
-      if (!isAdmin) return;
-      let input = document.getElementById('orderInput');
-      if (input.value.trim()) {
-        input.value += " + Meal 🍟🥤";
-        let current = parseFloat(input.getAttribute("data-price")) || 0;
-        input.setAttribute("data-price", current + 2.99);
-      } else {
-        showNotification("Enter an order first before adding a meal!", "error");
-      }
-    }
-    
-    async function addOrder() {
-      if (!isAdmin) {
-        console.error("Admin login required to add orders.");
-        return;
-      }
-    
-      let orderInput = document.getElementById('orderInput');
-      let price = parseFloat(orderInput.getAttribute("data-price")) || 0;
-      
-      if (!orderInput.value.trim()) {
-        showNotification("Order cannot be empty!", "error");
-        return;
-      }
-    
-      let order = { id: orderCounter++, item: orderInput.value, price };
-      localStorage.setItem('orderCounter', orderCounter);
-    
-      try {
-        // Post the order to the backend.
-        let response = await fetch(`${backendURL}/orders`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(order)
-        });
-    
-        if (!response.ok) {
-          throw new Error("Failed to add order.");
-        }
-    
-        document.getElementById('lastOrderPrice').innerText = price.toFixed(2);
-        document.getElementById('referralButton').style.display = "inline-block";
-        showNotification(`Order #${order.id} added successfully!`);
-        orderInput.value = "";
-        orderInput.removeAttribute("data-price");
-        fetchOrders();
-      } catch (error) {
-        console.error(error.message);
-        showNotification("Error adding order!", "error");
-      }
-    }
-    
-    async function fetchOrders() {
-      try {
-        let response = await fetch(`${backendURL}/orders`);
-        let orders = await response.json();
-    
-        let orderList = document.getElementById('orderList');
-        orderList.innerHTML = orders.map(order => `
-          <li id="order-${order.id}">
-            #${order.id} - ${order.item} (£${order.price.toFixed(2)})
-            ${ isAdmin ? `<button onclick="deleteOrder(${order.id}, ${order.price})">❌</button>` : '' }
-          </li>
-        `).join('');
-      } catch (err) {
-        console.error("Error fetching orders:", err);
-      }
-    }
-    
-    async function deleteOrder(id, price) {
-      if (!isAdmin) return;
-      await fetch(`${backendURL}/orders/${id}`, { method: "DELETE" });
-      let orderElem = document.getElementById(`order-${id}`);
-      orderElem.style.opacity = "0";
-      setTimeout(() => fetchOrders(), 300);
-      showNotification(`Order #${id} deleted successfully!`);
-    }
-    
-    function applyReferral() {
-      let lastOrderPriceElement = document.getElementById('lastOrderPrice');
-      let price = parseFloat(lastOrderPriceElement.innerText) || 0;
-      let discount = price * 0.1;
-      price = price - discount;
-      lastOrderPriceElement.innerText = price.toFixed(2);
-      document.getElementById('referralButton').style.display = "none";
-      showNotification("10% discount applied!");
-    }
-    
-    window.onload = fetchOrders;
-  </script>
-</body>
-</html>
+      margin-top
