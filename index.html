@@ -6,7 +6,9 @@
   <title>BoroBurgers Orders - Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" 
+    rel="stylesheet" />
   <style>
     /* Global Styling */
     body {
@@ -25,7 +27,7 @@
       width: 100%;
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
       padding: 30px;
       animation: fadeIn 0.6s ease-in-out;
     }
@@ -50,19 +52,24 @@
       background-color: #007bff;
       color: #fff;
       border: none;
-      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+      box-shadow: 0 4px 8px rgba(0,123,255,0.4);
     }
     button:hover {
       background-color: #0056b3;
       transform: scale(1.02);
     }
-    .autofill-buttons, .autofill-buttons-extra, .autofill-buttons-no-extra, .discount-buttons {
+    /* Button Groups */
+    .autofill-buttons,
+    .autofill-buttons-extra,
+    .autofill-buttons-no-extra,
+    .discount-buttons {
       margin-top: 20px;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
     }
-    .autofill-buttons-extra button, .autofill-buttons button {
+    .autofill-buttons button,
+    .autofill-buttons-extra button {
       background-color: #28a745;
     }
     .autofill-buttons-no-extra button {
@@ -118,7 +125,7 @@
       border-radius: 8px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.5s ease-in-out;
+      transition: opacity 0.5s ease;
     }
     #notification.error {
       background: #dc3545;
@@ -193,17 +200,18 @@
   <div id="notification"></div>
   
   <script>
+    // Global variables and backend URL
     const backendURL = "https://boroburgersorders.onrender.com";
     let orderCounter = localStorage.getItem('orderCounter') || 1;
     let isAdmin = sessionStorage.getItem('adminLoggedIn') === "true";
     
-    // Show admin section if already logged in
+    // On load: show admin section if logged in and fetch orders
     if (isAdmin) {
       document.getElementById('adminSection').style.display = "block";
       document.getElementById('adminLoginButton').style.display = "none";
     }
     
-    // Notification helper: displays a message briefly
+    // Notification helper function
     function showNotification(message, type = "success") {
       const notification = document.getElementById('notification');
       notification.textContent = message;
@@ -229,6 +237,7 @@
       const username = document.getElementById('adminUsername').value;
       const password = document.getElementById('adminPassword').value;
       
+      console.log("Attempting admin login:", username, password); // Debug log
       if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
         sessionStorage.setItem('adminLoggedIn', "true");
         isAdmin = true;
@@ -250,7 +259,7 @@
     }
     
     // ORDER MODIFICATION FUNCTIONS
-    // Append text and update price if applicable
+    // Append item text and update stored price
     function autofill(item, price) {
       if (!isAdmin) return;
       const input = document.getElementById('orderInput');
@@ -260,11 +269,12 @@
         input.setAttribute("data-price", (currentPrice + price).toFixed(2));
       } else {
         input.value = item;
-        input.setAttribute("data-price", price);
+        input.setAttribute("data-price", price.toFixed(2));
       }
+      console.log("Order after autofill:", input.value, "Price:", input.getAttribute("data-price"));
     }
     
-    // Append text only (without altering the price)
+    // Append text only; no price change
     function autofillCustom(item) {
       if (!isAdmin) return;
       const input = document.getElementById('orderInput');
@@ -273,28 +283,29 @@
       } else {
         input.value = item;
       }
+      console.log("Order after autofillCustom:", input.value);
     }
     
-    // Append a meal option (updates price)
+    // Append meal option (updates price)
     function addMeal() {
       if (!isAdmin) return;
       const input = document.getElementById('orderInput');
-      const current = parseFloat(input.getAttribute("data-price") || "0");
+      const currentPrice = parseFloat(input.getAttribute("data-price") || "0");
       if (input.value.trim()) {
         input.value += " + Meal 🍟🥤";
-        input.setAttribute("data-price", (current + 2.99).toFixed(2));
+        input.setAttribute("data-price", (currentPrice + 2.99).toFixed(2));
       } else {
         showNotification("Enter an order first before adding a meal!", "error");
       }
+      console.log("Order after adding meal:", input.value, "Price:", input.getAttribute("data-price"));
     }
     
-    // ADD ORDER: submits the order, resets the form, and updates the order list
+    // ADD ORDER: Builds order object, submits, clears the input, and fetches orders
     async function addOrder() {
       if (!isAdmin) {
         console.error("Admin login required to add orders.");
         return;
       }
-      
       const orderInput = document.getElementById('orderInput');
       let price = parseFloat(orderInput.getAttribute("data-price") || "0");
       
@@ -326,7 +337,7 @@
       }
     }
     
-    // FETCH ORDERS: retrieves orders from the backend and displays them
+    // FETCH ORDERS: Retrieves orders from backend and displays them
     async function fetchOrders() {
       try {
         const response = await fetch(`${backendURL}/orders`);
@@ -343,7 +354,7 @@
       }
     }
     
-    // DELETE ORDER: deletes a given order (admin only)
+    // DELETE ORDER: Deletes the given order (admin only)
     async function deleteOrder(id) {
       if (!isAdmin) return;
       try {
@@ -358,7 +369,9 @@
       }
     }
     
-    // DISCOUNT FUNCTIONS: Append discount label and update the stored price, only if there's an order
+    // DISCOUNT FUNCTIONS:
+    // They check that the order input is non-empty and then update the stored price
+    // Append the discount text into the order input field.
     function applyReferral() {
       if (!isAdmin) return;
       const input = document.getElementById('orderInput');
@@ -371,11 +384,13 @@
         showNotification("No valid price to discount.", "error");
         return;
       }
-      let discountAmount = currentPrice * 0.1;
-      currentPrice -= discountAmount;
+      console.log("Applying referral discount. Current Price:", currentPrice);
+      let discountAmount = currentPrice * 0.10;
+      let newPrice = currentPrice - discountAmount;
       input.value += " + Referral Code (10% Off)";
-      input.setAttribute("data-price", currentPrice.toFixed(2));
+      input.setAttribute("data-price", newPrice.toFixed(2));
       showNotification("10% referral discount applied!");
+      console.log("New Price after referral discount:", newPrice);
     }
     
     function applyFamilyDiscount() {
@@ -390,11 +405,13 @@
         showNotification("No valid price to discount.", "error");
         return;
       }
+      console.log("Applying family discount. Current Price:", currentPrice);
       let discountAmount = currentPrice * 0.05;
-      currentPrice -= discountAmount;
+      let newPrice = currentPrice - discountAmount;
       input.value += " + Friends & Family (5% Off)";
-      input.setAttribute("data-price", currentPrice.toFixed(2));
+      input.setAttribute("data-price", newPrice.toFixed(2));
       showNotification("5% friends & family discount applied!");
+      console.log("New Price after family discount:", newPrice);
     }
     
     window.onload = function() {
