@@ -3,1177 +3,456 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BoroBurgers - Order Management System</title>
-  <!-- Google Fonts -->
+  <title>BoroBurgers Orders - Dashboard</title>
+  <!-- Google Fonts for a professional look -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
+    rel="stylesheet" />
   <style>
-    :root {
-      --primary-color: #2563eb;
-      --primary-hover: #1d4ed8;
-      --success-color: #059669;
-      --error-color: #dc2626;
-      --warning-color: #d97706;
-      --gray-50: #f9fafb;
-      --gray-100: #f3f4f6;
-      --gray-200: #e5e7eb;
-      --gray-300: #d1d5db;
-      --gray-400: #9ca3af;
-      --gray-500: #6b7280;
-      --gray-600: #4b5563;
-      --gray-700: #374151;
-      --gray-800: #1f2937;
-      --gray-900: #111827;
-      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    /* Global Styling */
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      line-height: 1.6;
-    }
-
-    /* Login Container */
-    .login-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .login-card {
-      background: white;
-      border-radius: 16px;
-      box-shadow: var(--shadow-xl);
-      padding: 40px;
-      width: 100%;
-      max-width: 400px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .login-header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    .login-header .logo-placeholder {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      color: white;
-      font-weight: 700;
-      font-size: 24px;
-    }
-
-    .login-header h1 {
-      color: var(--gray-900);
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .login-header p {
-      color: var(--gray-500);
-      font-size: 14px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--gray-700);
-      margin-bottom: 6px;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid var(--gray-200);
-      border-radius: 8px;
-      font-size: 16px;
-      transition: all 0.2s ease;
-      background: var(--gray-50);
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      background: white;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-
-    .btn-primary {
-      width: 100%;
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-hover);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .btn-primary:active {
-      transform: translateY(0);
-    }
-
-    .btn-primary:disabled {
-      background: var(--gray-400);
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    /* Dashboard Container */
-    .dashboard-container {
-      display: none;
-      min-height: 100vh;
-      background: var(--gray-50);
-    }
-
-    .header {
-      background: white;
-      box-shadow: var(--shadow-sm);
-      padding: 16px 0;
-      border-bottom: 1px solid var(--gray-200);
-    }
-
-    .header-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo h1 {
-      color: var(--gray-900);
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    .user-menu {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .user-info {
-      color: var(--gray-600);
-      font-size: 14px;
-    }
-
-    .connection-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-    }
-
-    .status-indicator {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--success-color);
-    }
-
-    .status-indicator.offline {
-      background: var(--error-color);
-    }
-
-    .status-indicator.reconnecting {
-      background: var(--warning-color);
-      animation: pulse 1s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .btn-secondary {
-      background: var(--gray-100);
-      color: var(--gray-700);
-      border: 1px solid var(--gray-300);
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-secondary:hover {
-      background: var(--gray-200);
-    }
-
-    .main-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 20px;
-      display: grid;
-      grid-template-columns: 1fr 400px;
-      gap: 32px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--gray-200);
-      overflow: hidden;
-    }
-
-    .card-header {
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--gray-200);
-      background: var(--gray-50);
-    }
-
-    .card-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--gray-900);
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f8f9fa, #e3e7eb);
       margin: 0;
-    }
-
-    .card-content {
-      padding: 24px;
-    }
-
-    .order-input-section {
-      margin-bottom: 24px;
-    }
-
-    .input-group {
+      padding: 20px;
       display: flex;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .order-input {
-      flex: 1;
-      padding: 12px 16px;
-      border: 2px solid var(--gray-200);
-      border-radius: 8px;
-      font-size: 14px;
-      transition: all 0.2s ease;
-    }
-
-    .order-input:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-
-    .btn-add {
-      background: var(--success-color);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .btn-add:hover {
-      background: #047857;
-      transform: translateY(-1px);
-    }
-
-    .btn-add:disabled {
-      background: var(--gray-400);
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .section {
-      margin-bottom: 24px;
-    }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--gray-800);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .button-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 8px;
-    }
-
-    .btn-option {
-      background: white;
-      color: var(--gray-700);
-      border: 2px solid var(--gray-200);
-      padding: 10px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: left;
-    }
-
-    .btn-option:hover {
-      border-color: var(--primary-color);
-      background: var(--primary-color);
-      color: white;
-      transform: translateY(-1px);
-    }
-
-    .price-display {
-      background: var(--gray-100);
-      padding: 16px;
-      border-radius: 8px;
-      text-align: center;
-      margin-top: 16px;
-    }
-
-    .current-price {
-      font-size: 14px;
-      color: var(--gray-600);
-      margin-bottom: 4px;
-    }
-
-    .price-amount {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--primary-color);
-    }
-
-    .orders-list {
-      list-style: none;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
-    .order-item {
-      background: var(--gray-50);
-      border: 1px solid var(--gray-200);
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 12px;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-
-    .order-item:hover {
-      background: white;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .order-actions {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      display: flex;
-      gap: 8px;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    .order-item:hover .order-actions {
-      opacity: 1;
-    }
-
-    .btn-delete {
-      background: var(--error-color);
-      color: white;
-      border: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .container {
+      position: relative;
+      max-width: 700px;
+      width: 100%;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      padding: 30px;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h2, h3, h4 {
+      color: #007bff;
+      margin-bottom: 15px;
+    }
+    input, button {
+      margin: 8px 4px;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: all 0.3s ease-in-out;
+    }
+    input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+    button {
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+    }
+    button:hover {
+      background-color: #0056b3;
+      transform: scale(1.02);
+    }
+    /* Quick Fill & Custom Autofill Buttons */
+    .autofill-buttons,
+    .custom-autofill {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .autofill-buttons button,
+    .custom-autofill button {
+      background-color: #28a745;
       font-size: 14px;
-      transition: all 0.2s ease;
     }
-
-    .btn-delete:hover {
-      background: #b91c1c;
-      transform: scale(1.05);
+    .autofill-buttons button:hover,
+    .custom-autofill button:hover {
+      background-color: #218838;
     }
-
-    .order-header {
+    /* Extra Add-on Buttons (update price) */
+    .autofill-buttons-extra {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .autofill-buttons-extra button {
+      background-color: #28a745;
+      font-size: 14px;
+    }
+    .autofill-buttons-extra button:hover {
+      background-color: #218838;
+    }
+    /* No Add-on Buttons (append text only, leave price unchanged) */
+    .autofill-buttons-no-extra {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .autofill-buttons-no-extra button {
+      background-color: #007bff;
+      font-size: 14px;
+    }
+    .autofill-buttons-no-extra button:hover {
+      background-color: #0056b3;
+    }
+    /* Discount Options */
+    .discount-buttons {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .discount-buttons button {
+      background-color: #dc3545;
+      font-size: 14px;
+    }
+    .discount-buttons button:hover {
+      background-color: #c82333;
+    }
+    /* Order List Styling */
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background: #f4f4f4;
+      margin: 8px 0;
+      padding: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .order-id {
-      font-weight: 600;
-      color: var(--primary-color);
-      font-size: 14px;
-    }
-
-    .order-price {
-      font-weight: 700;
-      color: var(--success-color);
-      font-size: 16px;
-    }
-
-    .order-details {
-      color: var(--gray-600);
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    .order-meta {
-      font-size: 12px;
-      color: var(--gray-400);
-      margin-top: 8px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .summary-card {
-      background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-      color: white;
-      padding: 24px;
-      border-radius: 12px;
-      text-align: center;
-      margin-top: 24px;
-    }
-
-    .summary-title {
-      font-size: 16px;
-      margin-bottom: 8px;
-      opacity: 0.9;
-    }
-
-    .summary-price {
-      font-size: 32px;
-      font-weight: 700;
-    }
-
-    /* Toast Notifications */
-    .toast {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 16px 20px;
       border-radius: 8px;
-      color: white;
-      font-weight: 500;
-      z-index: 1000;
-      transform: translateX(400px);
-      transition: transform 0.3s ease;
-      box-shadow: var(--shadow-lg);
+      animation: fadeInOrder 0.5s ease-in-out;
     }
-
-    .toast.show {
-      transform: translateX(0);
+    @keyframes fadeInOrder {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
     }
-
-    .toast.success {
-      background: var(--success-color);
-    }
-
-    .toast.error {
-      background: var(--error-color);
-    }
-
-    .toast.warning {
-      background: var(--warning-color);
-    }
-
-    /* Loading States */
-    .loading {
-      opacity: 0.6;
-      pointer-events: none;
-    }
-
-    .spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid #ffffff;
-      border-radius: 50%;
-      border-top-color: transparent;
-      animation: spin 1s ease-in-out infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .main-content {
-        grid-template-columns: 1fr;
-        gap: 20px;
-        padding: 20px;
-      }
-
-      .header-content {
-        padding: 0 16px;
-      }
-
-      .button-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .input-group {
-        flex-direction: column;
-      }
-    }
-
-    .empty-state {
+    /* Price Section */
+    .price-section {
+      margin-top: 20px;
       text-align: center;
-      padding: 40px 20px;
-      color: var(--gray-500);
     }
-
-    .empty-state svg {
-      width: 64px;
-      height: 64px;
-      margin-bottom: 16px;
-      opacity: 0.5;
+    /* Notification Bar */
+    #notification {
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #28a745;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease-in-out;
     }
-
-    .refresh-button {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      margin-left: 8px;
+    #notification.error {
+      background: #dc3545;
     }
-
-    .refresh-button:hover {
-      background: var(--primary-hover);
+    /* Admin Login Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 8px;
+      padding: 30px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.4s ease-in-out;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .modal input {
+      width: calc(100% - 30px);
+      margin: 10px 0;
+    }
+    .modal button {
+      width: calc(50% - 20px);
+      margin: 10px;
     }
   </style>
 </head>
 <body>
-  <!-- Login Screen -->
-  <div class="login-container" id="loginScreen">
-    <div class="login-card">
-      <div class="login-header">
-        <div class="logo-placeholder">🍔</div>
-        <h1>BoroBurgers</h1>
-        <p>Order Management System</p>
+  <!-- Notification Bar -->
+  <div id="notification"></div>
+
+  <div class="container">
+    <h2>🍔 BoroBurgers Order Management 🍟🥤</h2>
+    
+    <!-- Public Section: Order List -->
+    <div id="publicSection">
+      <ul id="orderList"></ul>
+      <div class="price-section">
+        <h4>Last Order Price: £<span id="lastOrderPrice">0.00</span></h4>
       </div>
-      <form id="loginForm">
-        <div class="form-group">
-          <label class="form-label" for="username">Username</label>
-          <input class="form-input" type="text" id="username" name="username" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="password">Password</label>
-          <input class="form-input" type="password" id="password" name="password" required />
-        </div>
-        <button type="submit" class="btn-primary">Sign In</button>
-      </form>
+      <button id="adminLoginButton" onclick="showAdminModal()">Admin Login</button>
+    </div>
+
+    <!-- Admin Section: Visible After Login -->
+    <div id="adminSection" style="display:none;">
+      <button onclick="logoutAdmin()">Logout Admin</button>
+      <h3>Admin Dashboard</h3>
+      <input type="text" id="orderInput" placeholder="Enter order details" />
+      <button onclick="addOrder()">Add Order</button>
+      
+      <!-- Quick Fill Options (that update price) -->
+      <div class="autofill-buttons">
+        <h4>🔥 Quick Fill Options:</h4>
+        <button onclick="autofill('The Classic', 5.99)">The Classic (£5.99)</button>
+        <button onclick="autofill('The Serbian Burger', 6.49)">The Serbian Burger (£6.49)</button>
+        <button onclick="autofill('The BigMak', 7.99)">The BigMak (£7.99)</button>
+        <button onclick="addMeal()">Add Meal 🍟🥤 (£2.99)</button>
+      </div>
+
+      <!-- Extra Custom Buttons (append text only, no price update) -->
+      <div class="custom-autofill">
+        <h4>✨ Extra Custom Buttons (No Price):</h4>
+        <button onclick="autofillCustom('Custom Item 1')">Custom 1</button>
+        <button onclick="autofillCustom('Custom Item 2')">Custom 2</button>
+        <button onclick="autofillCustom('Custom Item 3')">Custom 3</button>
+        <button onclick="autofillCustom('Custom Item 4')">Custom 4</button>
+      </div>
+
+      <!-- Extra Add-on Buttons (that update price) -->
+      <div class="autofill-buttons-extra">
+        <h4>Add-ons:</h4>
+        <button onclick="autofill('Extra Lettuce', 0.75)">Extra Lettuce (£0.75)</button>
+        <button onclick="autofill('Extra Tomatoes', 0.75)">Extra Tomatoes (£0.75)</button>
+        <button onclick="autofill('Extra Caramelized Onions', 1.00)">Extra Caramelized Onions (£1.00)</button>
+        <button onclick="autofill('Extra Mayo', 0.50)">Extra Mayo (£0.50)</button>
+      </div>
+
+      <!-- "No Add-on" Buttons (append text only, leave price unchanged) -->
+      <div class="autofill-buttons-no-extra">
+        <h4>No Add-ons:</h4>
+        <button onclick="autofillCustom('No Lettuce')">No Lettuce</button>
+        <button onclick="autofillCustom('No Tomatoes')">No Tomatoes</button>
+        <button onclick="autofillCustom('No Caramelized Onions')">No Caramelized Onions</button>
+        <button onclick="autofillCustom('No Mayo')">No Mayo</button>
+      </div>
+
+      <!-- Discount Options (only for admin) -->
+      <div class="discount-buttons">
+        <h4>Discount Options:</h4>
+        <button onclick="applyReferral()">Referral Code (10% Off)</button>
+        <button onclick="applyFamilyDiscount()">Friends &amp; Family (5% Off)</button>
+      </div>
     </div>
   </div>
 
-  <!-- Dashboard -->
-  <div class="dashboard-container" id="dashboard">
-    <header class="header">
-      <div class="header-content">
-        <div class="logo">
-          <div class="logo-placeholder" style="width: 40px; height: 40px; font-size: 16px;">🍔</div>
-          <h1>BoroBurgers</h1>
-        </div>
-        <div class="user-menu">
-          <div class="connection-status">
-            <div class="status-indicator" id="connectionStatus"></div>
-            <span id="connectionText">Online</span>
-          </div>
-          <div class="user-info">Welcome, <span id="currentUser">Admin</span></div>
-          <button class="btn-secondary" onclick="logout()">Logout</button>
-        </div>
+  <!-- Admin Login Modal -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal">
+      <h3>Admin Login</h3>
+      <input type="text" id="adminUsername" placeholder="Username" />
+      <input type="password" id="adminPassword" placeholder="Password" />
+      <div style="display: flex; justify-content: center;">
+        <button onclick="adminLogin()">Login</button>
+        <button onclick="hideAdminModal()">Cancel</button>
       </div>
-    </header>
-
-    <main class="main-content">
-      <div class="order-builder">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">Order Builder</h2>
-          </div>
-          <div class="card-content">
-            <div class="order-input-section">
-              <div class="input-group">
-                <input class="order-input" type="text" id="customerName" placeholder="Customer Name" />
-                <input class="order-input" type="tel" id="customerPhone" placeholder="Phone Number" />
-              </div>
-              <div class="input-group">
-                <input class="order-input" type="text" id="orderNotes" placeholder="Special Instructions (Optional)" />
-                <button class="btn-add" onclick="addOrder()">Add Order</button>
-              </div>
-            </div>
-
-            <div class="section">
-              <h3 class="section-title">🍔 Burgers</h3>
-              <div class="button-grid" id="burgerOptions"></div>
-            </div>
-
-            <div class="section">
-              <h3 class="section-title">🍟 Sides</h3>
-              <div class="button-grid" id="sideOptions"></div>
-            </div>
-
-            <div class="section">
-              <h3 class="section-title">🥤 Drinks</h3>
-              <div class="button-grid" id="drinkOptions"></div>
-            </div>
-
-            <div class="price-display">
-              <div class="current-price">Current Order Total</div>
-              <div class="price-amount" id="currentOrderPrice">£0.00</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="order-management">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">Active Orders <button class="refresh-button" onclick="refreshOrders()">↻</button></h2>
-          </div>
-          <div class="card-content">
-            <ul class="orders-list" id="ordersList">
-              <div class="empty-state">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z"/>
-                </svg>
-                <p>No active orders yet</p>
-              </div>
-            </ul>
-          </div>
-        </div>
-
-        <div class="summary-card">
-          <div class="summary-title">Total Revenue Today</div>
-          <div class="summary-price" id="totalRevenue">£0.00</div>
-        </div>
-      </div>
-    </main>
+    </div>
   </div>
 
   <script>
-    // Application State
-    let currentOrder = [];
-    let orders = [];
-    let orderCounter = 1;
-    let totalRevenue = 0;
-    let isLoggedIn = false;
+    const backendURL = "https://boroburgersorders.onrender.com";
+    let orderCounter = localStorage.getItem('orderCounter') || 1;
+    let isAdmin = sessionStorage.getItem('adminLoggedIn') === "true";
 
-    // Menu Items with prices
-    const menuItems = {
-      burgers: [
-        { name: 'The Classic', price: 5.99 },
-        { name: 'Serbian Classic', price: 6.99 },
-        { name: 'Big Mak', price: 8.99 },
-        { name: '+Meal', price: 2.76 },
-      ],
-      Extras: [
-        { name: 'Lettuce', price: 0.75 },
-        { name: 'Tomatoes', price: 0.75 },
-        { name: 'Caramalized Onions', price: 1.00 },
-        { name: 'Spicy Mayo Sauce', price: 0.50 },
-      ],
-      Requirements: [
-        { name: 'No Lettuce', price: 0.00 },
-        { name: 'No Tomatoes', price: 0.00 },
-        { name: 'No Caramalized Onions', price: 0.00 },
-        { name: 'No Spicy Mayo Sauce', price: 0.00 },
-        { name: 'No Ketchup', price: 0.00 },
-        { name: 'No Mustard', price: 0.00 }
-      ]
-  
-
-     Drinks: [
-        { name: 'Diet Coke', price: 3.00 },
-        { name: 'Dr. Pepper', price: 3.00 },
-      ]
-    };
-
-
-    // Initialize the application
-    function init() {
-      renderMenuItems();
-      setupEventListeners();
-      updateUI();
+    // Show admin section if already logged in
+    if (isAdmin) {
+      document.getElementById('adminSection').style.display = "block";
+      document.getElementById('adminLoginButton').style.display = "none";
     }
 
-    // Setup event listeners
-    function setupEventListeners() {
-      document.getElementById('loginForm').addEventListener('submit', handleLogin);
-      
-      // Simulate connection status changes
-      setInterval(() => {
-        const status = Math.random() > 0.95 ? 'offline' : 'online';
-        updateConnectionStatus(status);
-      }, 5000);
+    // Notification helper: displays messages briefly.
+    function showNotification(message, type = "success") {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = (type === "error") ? "error" : "";
+      notification.style.opacity = "1";
+      setTimeout(() => { notification.style.opacity = "0"; }, 2500);
     }
 
-    // Handle login
-    function handleLogin(e) {
-      e.preventDefault();
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      
-      // Simple authentication (in real app, this would be server-side)
-      if (username && password) {
-        isLoggedIn = true;
-        document.getElementById('currentUser').textContent = username;
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        showToast('Welcome to BoroBurgers!', 'success');
+    // Admin modal functions.
+    function showAdminModal() {
+      document.getElementById('adminModal').style.display = 'flex';
+    }
+    function hideAdminModal() {
+      document.getElementById('adminModal').style.display = 'none';
+    }
+
+    // Dummy admin credentials (for demonstration only)
+    const ADMIN_USERNAME = "admin";
+    const ADMIN_PASSWORD = "admin123";
+    function adminLogin() {
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
+      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        sessionStorage.setItem('adminLoggedIn', "true");
+        isAdmin = true;
+        document.getElementById('adminSection').style.display = "block";
+        document.getElementById('adminLoginButton').style.display = "none";
+        hideAdminModal();
+        showNotification("Admin logged in successfully!");
       } else {
-        showToast('Please enter username and password', 'error');
+        showNotification("Invalid credentials!", "error");
+      }
+    }
+    function logoutAdmin() {
+      sessionStorage.removeItem('adminLoggedIn');
+      isAdmin = false;
+      document.getElementById('adminSection').style.display = "none";
+      document.getElementById('adminLoginButton').style.display = "inline-block";
+      showNotification("Admin logged out.");
+    }
+
+    // Append text and update price if applicable.
+    function autofill(item, price) {
+      if (!isAdmin) return;
+      const input = document.getElementById('orderInput');
+      // Use default "0" if data-price is not set
+      const currentPrice = parseFloat(input.getAttribute("data-price") || "0");
+      if (input.value.trim()) {
+        input.value += " + " + item;
+        input.setAttribute("data-price", currentPrice + price);
+      } else {
+        input.value = item;
+        input.setAttribute("data-price", price);
       }
     }
 
-    // Logout function
-    function logout() {
-      isLoggedIn = false;
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('dashboard').style.display = 'none';
-      document.getElementById('loginForm').reset();
-      showToast('Logged out successfully', 'success');
+    // Append text only without altering the current price.
+    function autofillCustom(item) {
+      if (!isAdmin) return;
+      const input = document.getElementById('orderInput');
+      if (input.value.trim()) {
+        input.value += " + " + item;
+      } else {
+        input.value = item;
+      }
     }
 
-    // Render menu items
-    function renderMenuItems() {
-      Object.keys(menuItems).forEach(category => {
-        const container = document.getElementById(category.slice(0, -1) + 'Options');
-        if (container) {
-          container.innerHTML = menuItems[category].map(item => 
-            `<button class="btn-option" onclick="addToCurrentOrder('${item.name}', ${item.price})">
-              ${item.name} - £${item.price.toFixed(2)}
-            </button>`
-          ).join('');
-        }
-      });
+    // Append a meal option (updates price).
+    function addMeal() {
+      if (!isAdmin) return;
+      const input = document.getElementById('orderInput');
+      const current = parseFloat(input.getAttribute("data-price") || "0");
+      if (input.value.trim()) {
+        input.value += " + Meal 🍟🥤";
+        input.setAttribute("data-price", current + 2.99);
+      } else {
+        showNotification("Enter an order first before adding a meal!", "error");
+      }
     }
 
-    // Add item to current order
-    function addToCurrentOrder(itemName, price) {
-      currentOrder.push({ name: itemName, price: price });
-      updateCurrentOrderPrice();
-      showToast(`Added ${itemName} to order`, 'success');
-    }
-
-    // Update current order price display
-    function updateCurrentOrderPrice() {
-      const total = currentOrder.reduce((sum, item) => sum + item.price, 0);
-      document.getElementById('currentOrderPrice').textContent = `£${total.toFixed(2)}`;
-    }
-
-    // Add order to the system
-    function addOrder() {
-      const customerName = document.getElementById('customerName').value;
-      const customerPhone = document.getElementById('customerPhone').value;
-      const orderNotes = document.getElementById('orderNotes').value;
-
-      if (!customerName || currentOrder.length === 0) {
-        showToast('Please enter customer name and add items to order', 'error');
+    // Add an order (admin only).
+    async function addOrder() {
+      if (!isAdmin) {
+        console.error("Admin login required to add orders.");
         return;
       }
-
-      const order = {
-        id: orderCounter++,
-        customerName,
-        customerPhone,
-        items: [...currentOrder],
-        notes: orderNotes,
-        total: currentOrder.reduce((sum, item) => sum + item.price, 0),
-        timestamp: new Date(),
-        status: 'active'
-      };
-
-      orders.push(order);
-      totalRevenue += order.total;
-      
-      // Clear current order
-      currentOrder = [];
-      document.getElementById('customerName').value = '';
-      document.getElementById('customerPhone').value = '';
-      document.getElementById('orderNotes').value = '';
-      
-      updateCurrentOrderPrice();
-      renderOrders();
-      updateTotalRevenue();
-      showToast(`Order #${order.id} added successfully!`, 'success');
-    }
-
-    // Render orders list
-    function renderOrders() {
-      const ordersList = document.getElementById('ordersList');
-      
-      if (orders.length === 0) {
-        ordersList.innerHTML = `
-          <div class="empty-state">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z"/>
-            </svg>
-            <p>No active orders yet</p>
-          </div>
-        `;
+      const orderInput = document.getElementById('orderInput');
+      // Default to "0" if data-price is missing
+      let price = parseFloat(orderInput.getAttribute("data-price") || "0");
+      if (!orderInput.value.trim()) {
+        showNotification("Order cannot be empty!", "error");
         return;
       }
-
-      ordersList.innerHTML = orders.map(order => `
-        <li class="order-item">
-          <div class="order-actions">
-            <button class="btn-delete" onclick="deleteOrder(${order.id})" title="Delete Order">✕</button>
-          </div>
-          <div class="order-header">
-            <span class="order-id">Order #${order.id}</span>
-            <span class="order-price">£${order.total.toFixed(2)}</span>
-          </div>
-          <div class="order-details">
-            <strong>${order.customerName}</strong>
-            ${order.customerPhone ? ` • ${order.customerPhone}` : ''}
-            <br>
-            ${order.items.map(item => item.name).join(', ')}
-            ${order.notes ? `<br><em>Notes: ${order.notes}</em>` : ''}
-          </div>
-          <div class="order-meta">
-            <span>${order.timestamp.toLocaleTimeString()}</span>
-            <span>${order.items.length} items</span>
-          </div>
-        </li>
-      `).join('');
-    }
-
-    // Delete order
-    function deleteOrder(orderId) {
-      const orderIndex = orders.findIndex(order => order.id === orderId);
-      if (orderIndex !== -1) {
-        const order = orders[orderIndex];
-        totalRevenue -= order.total;
-        orders.splice(orderIndex, 1);
-        renderOrders();
-        updateTotalRevenue();
-        showToast(`Order #${orderId} deleted`, 'warning');
+      const order = { id: orderCounter++, item: orderInput.value, price };
+      localStorage.setItem('orderCounter', orderCounter);
+      try {
+        const response = await fetch(`${backendURL}/orders`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(order)
+        });
+        if (!response.ok) { throw new Error("Failed to add order."); }
+        document.getElementById('lastOrderPrice').innerText = price.toFixed(2);
+        showNotification(`Order #${order.id} added successfully!`);
+        orderInput.value = "";
+        orderInput.removeAttribute("data-price");
+        fetchOrders();
+      } catch (error) {
+        console.error(error.message);
+        showNotification("Error adding order!", "error");
       }
     }
 
-    // Update total revenue display
-    function updateTotalRevenue() {
-      document.getElementById('totalRevenue').textContent = `£${totalRevenue.toFixed(2)}`;
-    }
-
-    // Refresh orders (simulate data refresh)
-    function refreshOrders() {
-      const refreshBtn = document.querySelector('.refresh-button');
-      refreshBtn.innerHTML = '<div class="spinner"></div>';
-      refreshBtn.disabled = true;
-      
-      setTimeout(() => {
-        renderOrders();
-        refreshBtn.innerHTML = '↻';
-        refreshBtn.disabled = false;
-        showToast('Orders refreshed', 'success');
-      }, 1000);
-    }
-
-    // Connection status management
-    function updateConnectionStatus(status) {
-      const indicator = document.getElementById('connectionStatus');
-      const text = document.getElementById('connectionText');
-      
-      indicator.className = 'status-indicator';
-      
-      switch(status) {
-        case 'online':
-          indicator.classList.add('online');
-          text.textContent = 'Online';
-          break;
-        case 'offline':
-          indicator.classList.add('offline');
-          text.textContent = 'Offline';
-          break;
-        case 'reconnecting':
-          indicator.classList.add('reconnecting');
-          text.textContent = 'Reconnecting...';
-          break;
+    // Fetch orders and display them (admins see delete buttons).
+    async function fetchOrders() {
+      try {
+        const response = await fetch(`${backendURL}/orders`);
+        const orders = await response.json();
+        const orderList = document.getElementById('orderList');
+        orderList.innerHTML = orders.map(order => `
+          <li id="order-${order.id}">
+            #${order.id} - ${order.item} (£${order.price.toFixed(2)})
+            ${ isAdmin ? `<button onclick="deleteOrder(${order.id}, ${order.price})">❌</button>` : '' }
+          </li>
+        `).join('');
+      } catch (err) {
+        console.error("Error fetching orders:", err);
       }
     }
 
-    // Toast notification system
-    function showToast(message, type = 'success') {
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      
-      // Trigger animation
-      setTimeout(() => toast.classList.add('show'), 100);
-      
-      // Remove toast
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => document.body.removeChild(toast), 300);
-      }, 3000);
+    // Delete an order (admin only).
+    async function deleteOrder(id, price) {
+      if (!isAdmin) return;
+      await fetch(`${backendURL}/orders/${id}`, { method: "DELETE" });
+      const orderElem = document.getElementById(`order-${id}`);
+      orderElem.style.opacity = "0";
+      setTimeout(() => fetchOrders(), 300);
+      showNotification(`Order #${id} deleted successfully!`);
     }
 
-    // Update UI elements
-    function updateUI() {
-      updateCurrentOrderPrice();
-      renderOrders();
-      updateTotalRevenue();
+    // Apply a 10% referral discount (admin only).
+    function applyReferral() {
+      if (!isAdmin) return;
+      const priceElem = document.getElementById('lastOrderPrice');
+      let price = parseFloat(priceElem.innerText) || 0;
+      price = price - (price * 0.1);
+      priceElem.innerText = price.toFixed(2);
+      showNotification("10% referral discount applied!");
     }
 
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      if (!isLoggedIn) return;
-      
-      // Ctrl/Cmd + N for new order
-      if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
-        e.preventDefault();
-        document.getElementById('customerName').focus();
-      }
-      
-      // Ctrl/Cmd + Enter to add order
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        e.preventDefault();
-        addOrder();
-      }
-      
-      // Escape to clear current order
-      if (e.key === 'Escape') {
-        currentOrder = [];
-        updateCurrentOrderPrice();
-        showToast('Current order cleared', 'warning');
-      }
-    });
-
-    // Auto-save functionality (simulate saving to server)
-    function autoSave() {
-      if (orders.length > 0) {
-        // In a real application, this would save to a server
-        console.log('Auto-saving orders...', orders);
-      }
+    // Apply a 5% friends & family discount (admin only).
+    function applyFamilyDiscount() {
+      if (!isAdmin) return;
+      const priceElem = document.getElementById('lastOrderPrice');
+      let price = parseFloat(priceElem.innerText) || 0;
+      price = price - (price * 0.05);
+      priceElem.innerText = price.toFixed(2);
+      showNotification("5% friends & family discount applied!");
     }
 
-    // Auto-save every 30 seconds
-    setInterval(autoSave, 30000);
-
-    // Load saved data on page load (simulate loading from server)
-    function loadSavedData() {
-      // In a real application, this would load from a server
-      // For demo purposes, we'll start with some sample data
-      const sampleOrders = [
-        {
-          id: 1,
-          customerName: 'John Smith',
-          customerPhone: '07123456789',
-          items: [
-            { name: 'Classic Burger', price: 8.50 },
-            { name: 'Regular Fries', price: 3.50 },
-            { name: 'Coca-Cola', price: 2.50 }
-          ],
-          notes: 'No onions please',
-          total: 14.50,
-          timestamp: new Date(Date.now() - 1000000),
-          status: 'active'
-        },
-        {
-          id: 2,
-          customerName: 'Sarah Johnson',
-          customerPhone: '07987654321',
-          items: [
-            { name: 'Veggie Burger', price: 8.00 },
-            { name: 'Sweet Potato Fries', price: 4.00 }
-          ],
-          notes: '',
-          total: 12.00,
-          timestamp: new Date(Date.now() - 500000),
-          status: 'active'
-        }
-      ];
-      
-      // Uncomment the lines below to start with sample data
-      // orders = sampleOrders;
-      // orderCounter = 3;
-      // totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
-    }
-
-    // Print functionality for orders
-    function printOrder(orderId) {
-      const order = orders.find(o => o.id === orderId);
-      if (!order) return;
-      
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>Order #${order.id} - BoroBurgers</title>
-            <style>
-              body { font-family: Arial, sans-serif; margin: 20px; }
-              .header { text-align: center; margin-bottom: 20px; }
-              .order-details { margin-bottom: 20px; }
-              .items { margin-bottom: 20px; }
-              .total { font-weight: bold; font-size: 18px; }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <h1>🍔 BoroBurgers</h1>
-              <h2>Order #${order.id}</h2>
-            </div>
-            <div class="order-details">
-              <p><strong>Customer:</strong> ${order.customerName}</p>
-              ${order.customerPhone ? `<p><strong>Phone:</strong> ${order.customerPhone}</p>` : ''}
-              <p><strong>Time:</strong> ${order.timestamp.toLocaleString()}</p>
-              ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ''}
-            </div>
-            <div class="items">
-              <h3>Items:</h3>
-              <ul>
-                ${order.items.map(item => `<li>${item.name} - £${item.price.toFixed(2)}</li>`).join('')}
-              </ul>
-            </div>
-            <div class="total">
-              <p>Total: £${order.total.toFixed(2)}</p>
-            </div>
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
-    }
-
-    // Search functionality
-    function searchOrders(query) {
-      if (!query) {
-        renderOrders();
-        return;
-      }
-      
-      const filteredOrders = orders.filter(order => 
-        order.customerName.toLowerCase().includes(query.toLowerCase()) ||
-        order.customerPhone.includes(query) ||
-        order.id.toString().includes(query)
-      );
-      
-      // Temporarily update orders for rendering
-      const originalOrders = [...orders];
-      orders = filteredOrders;
-      renderOrders();
-      orders = originalOrders;
-    }
-
-    // Export data functionality
-    function exportData() {
-      const data = {
-        orders: orders,
-        totalRevenue: totalRevenue,
-        exportDate: new Date().toISOString()
-      };
-      
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `boroburgers-orders-${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      showToast('Order data exported successfully', 'success');
-    }
-
-    // Initialize the application when the page loads
-    document.addEventListener('DOMContentLoaded', () => {
-      loadSavedData();
-      init();
-    });
-
-    // Handle page visibility changes
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && isLoggedIn) {
-        // Refresh data when page becomes visible
-        refreshOrders();
-      }
-    });
-
-    // Service Worker registration for offline support (optional)
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(registration => {
-            console.log('SW registered: ', registration);
-          })
-          .catch(registrationError => {
-            console.log('SW registration failed: ', registrationError);
-          });
-      });
-    }
-
-    // Handle online/offline events
-    window.addEventListener('online', () => {
-      updateConnectionStatus('online');
-      showToast('Connection restored', 'success');
-    });
-
-    window.addEventListener('offline', () => {
-      updateConnectionStatus('offline');
-      showToast('Connection lost - working offline', 'warning');
-    });
-
-    // Cleanup function
-    window.addEventListener('beforeunload', () => {
-      autoSave();
-    });
-
+    window.onload = fetchOrders;
   </script>
 </body>
 </html>
