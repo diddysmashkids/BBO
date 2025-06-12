@@ -1,59 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BoroBurgers Orders</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BoroBurgers Orders - Dashboard</title>
+  <!-- Google Fonts for a professional look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
+    /* Global Styles */
     body {
-      font-family: "Poppins", sans-serif;
+      font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #f8f9fa, #e3e7eb);
-      margin: 20px;
-      text-align: center;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
     }
     .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+      position: relative;
+      max-width: 700px;
+      width: 100%;
+      background: #fff;
       border-radius: 12px;
-      animation: fadeIn 0.8s ease-in-out;
+      box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+      padding: 30px;
+      animation: fadeIn 0.6s ease-in-out;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     h2, h3, h4 {
       color: #007bff;
-      font-weight: 600;
+      margin-bottom: 15px;
     }
     input, button {
-      margin: 8px;
+      margin: 8px 4px;
       padding: 12px;
       font-size: 16px;
+      border: 1px solid #ccc;
       border-radius: 8px;
-      transition: 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+    input:focus {
+      outline: none;
+      border-color: #007bff;
     }
     button {
       cursor: pointer;
-      background: #007bff;
-      color: white;
+      background-color: #007bff;
+      color: #fff;
       border: none;
       box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.4);
     }
     button:hover {
-      background: #0056b3;
-      box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.6);
-      transform: scale(1.05);
+      background-color: #0056b3;
+      transform: scale(1.02);
     }
     .autofill-buttons button {
-      background: #28a745;
-      margin: 6px;
+      background-color: #28a745;
       font-size: 14px;
+      margin: 6px;
     }
     .autofill-buttons button:hover {
-      background: #218838;
+      background-color: #218838;
     }
     ul {
       list-style-type: none;
@@ -65,48 +85,109 @@
       padding: 12px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       border-radius: 8px;
       animation: fadeInOrder 0.5s ease-in-out;
     }
     @keyframes fadeInOrder {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
     .price-section {
-      margin-top: 25px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     #referralButton {
+      background-color: #dc3545;
       display: none;
-      background: #dc3545;
-      transition: 0.3s ease-in-out;
     }
     #referralButton:hover {
-      background: #c82333;
-      transform: scale(1.05);
+      background-color: #c82333;
+    }
+    /* Notification Bar */
+    #notification {
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #28a745;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease-in-out;
+    }
+    #notification.error {
+      background: #dc3545;
+    }
+    /* Admin Login Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 8px;
+      padding: 30px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0px 6px 20px rgba(0,0,0,0.3);
+      animation: slideIn 0.4s ease-in-out;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .modal input {
+      width: calc(100% - 30px);
+      margin: 10px 0;
+    }
+    .modal button {
+      width: calc(50% - 20px);
+      margin: 10px;
     }
   </style>
 </head>
 <body>
+  <!-- Notification Bar -->
+  <div id="notification"></div>
+
   <div class="container">
     <h2>🍔 BoroBurgers Order Management 🍟🥤</h2>
-    
-    <!-- Public Section: Everyone sees the orders list -->
+    <!-- Public Section: Orders list view -->
     <div id="publicSection">
       <ul id="orderList"></ul>
       <div class="price-section">
         <h4>Last Order Price: £<span id="lastOrderPrice">0.00</span></h4>
+        <button id="referralButton" onclick="applyReferral()">Referral Code (10% Off)</button>
       </div>
-      <!-- Button to show the admin login form -->
-      <button id="adminLoginButton" onclick="showAdminLogin()">Admin Login</button>
+      <button id="adminLoginButton" onclick="showAdminModal()">Admin Login</button>
     </div>
-    
-    <!-- Admin Section: Only visible when logged in -->
+
+    <!-- Admin Section (visible only after login) -->
     <div id="adminSection" style="display:none;">
       <button onclick="logoutAdmin()">Logout Admin</button>
       <h3>Admin Dashboard</h3>
-      <input type="text" id="orderInput" placeholder="Enter order details">
+      <input type="text" id="orderInput" placeholder="Enter order details" />
       <button onclick="addOrder()">Add Order</button>
-      
+
       <div class="autofill-buttons">
         <h4>🔥 Quick Fill Options:</h4>
         <button onclick="autofill('The Classic', 5.99)">The Classic (£5.99)</button>
@@ -121,42 +202,53 @@
         <button onclick="autofillCustom('Custom Item 3')">Custom 3</button>
         <button onclick="autofillCustom('Custom Item 4')">Custom 4</button>
       </div>
-      <div class="price-section">
-        <button id="referralButton" onclick="applyReferral()">Referral Code (10% Off)</button>
-      </div>
-    </div>
-    
-    <!-- Admin Login Form -->
-    <div id="adminLoginForm" style="display:none;">
-      <h3>Admin Login</h3>
-      <input type="text" id="adminUsername" placeholder="Username">
-      <input type="password" id="adminPassword" placeholder="Password">
-      <button onclick="adminLogin()">Login</button>
-      <button onclick="hideAdminLogin()">Cancel</button>
     </div>
   </div>
-  
+
+  <!-- Admin Login Modal -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal">
+      <h3>Admin Login</h3>
+      <input type="text" id="adminUsername" placeholder="Username" />
+      <input type="password" id="adminPassword" placeholder="Password" />
+      <div style="display: flex; justify-content: center;">
+        <button onclick="adminLogin()">Login</button>
+        <button onclick="hideAdminModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const backendURL = "https://boroburgersorders.onrender.com";
     let orderCounter = localStorage.getItem('orderCounter') || 1;
-    
-    // Check for admin status in sessionStorage on load.
     let isAdmin = sessionStorage.getItem('adminLoggedIn') === "true";
-    if(isAdmin) {
+
+    // Display the admin section if already logged in
+    if (isAdmin) {
       document.getElementById('adminSection').style.display = "block";
       document.getElementById('adminLoginButton').style.display = "none";
     }
-    
-    // Show/hide the admin login form.
-    function showAdminLogin() {
-      document.getElementById('adminLoginForm').style.display = "block";
+
+    // Notification helper
+    function showNotification(message, type = "success") {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = (type === "error") ? "error" : "";
+      notification.style.opacity = "1";
+      setTimeout(() => {
+        notification.style.opacity = "0";
+      }, 2500);
     }
-    
-    function hideAdminLogin() {
-      document.getElementById('adminLoginForm').style.display = "none";
+
+    // Admin modal functions
+    function showAdminModal() {
+      document.getElementById('adminModal').style.display = "flex";
     }
-    
-    // Dummy admin credentials.
+    function hideAdminModal() {
+      document.getElementById('adminModal').style.display = "none";
+    }
+
+    // Dummy admin credentials; in production, use secure server‑side authentication!
     const ADMIN_USERNAME = "admin";
     const ADMIN_PASSWORD = "admin123";
     
@@ -167,11 +259,11 @@
         sessionStorage.setItem('adminLoggedIn', "true");
         isAdmin = true;
         document.getElementById('adminSection').style.display = "block";
-        document.getElementById('adminLoginForm').style.display = "none";
         document.getElementById('adminLoginButton').style.display = "none";
-        alert("Admin logged in successfully!"); // (Optional alert retained for login)
+        hideAdminModal();
+        showNotification("Admin logged in successfully!");
       } else {
-        alert("Invalid credentials!");
+        showNotification("Invalid credentials!", "error");
       }
     }
     
@@ -180,14 +272,14 @@
       isAdmin = false;
       document.getElementById('adminSection').style.display = "none";
       document.getElementById('adminLoginButton').style.display = "inline-block";
-      alert("Admin logged out.");
+      showNotification("Admin logged out.");
     }
-    
-    // Append (instead of overwrite) quick fill items and update price.
+
+    // Append quick fill values; concatenates items and sums prices.
     function autofill(item, price) {
-      if(!isAdmin) return; // Only admin can add orders.
+      if (!isAdmin) return;
       let input = document.getElementById('orderInput');
-      if (input.value.trim() !== '') {
+      if (input.value.trim()) {
         input.value += " + " + item;
         let currentPrice = parseFloat(input.getAttribute("data-price")) || 0;
         input.setAttribute("data-price", currentPrice + price);
@@ -197,11 +289,10 @@
       }
     }
     
-    // Append custom items without price.
     function autofillCustom(item) {
-      if(!isAdmin) return;
+      if (!isAdmin) return;
       let input = document.getElementById('orderInput');
-      if (input.value.trim() !== '') {
+      if (input.value.trim()) {
         input.value += " + " + item;
       } else {
         input.value = item;
@@ -209,30 +300,29 @@
       input.removeAttribute("data-price");
     }
     
-    // Append a meal option.
     function addMeal() {
-      if(!isAdmin) return;
+      if (!isAdmin) return;
       let input = document.getElementById('orderInput');
-      if (input.value.trim() !== '') {
+      if (input.value.trim()) {
         input.value += " + Meal 🍟🥤";
         let current = parseFloat(input.getAttribute("data-price")) || 0;
         input.setAttribute("data-price", current + 2.99);
       } else {
-        alert("Enter an order first before adding a meal!");
+        showNotification("Enter an order first before adding a meal!", "error");
       }
     }
     
-    // Add an order (only when admin is logged in). No popup on success or failure.
     async function addOrder() {
-      if(!isAdmin) {
+      if (!isAdmin) {
         console.error("Admin login required to add orders.");
         return;
       }
+    
       let orderInput = document.getElementById('orderInput');
       let price = parseFloat(orderInput.getAttribute("data-price")) || 0;
-    
-      if (orderInput.value.trim() === '') {
-        alert("Order cannot be empty!");
+      
+      if (!orderInput.value.trim()) {
+        showNotification("Order cannot be empty!", "error");
         return;
       }
     
@@ -240,6 +330,7 @@
       localStorage.setItem('orderCounter', orderCounter);
     
       try {
+        // Post the order to the backend.
         let response = await fetch(`${backendURL}/orders`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -251,43 +342,43 @@
         }
     
         document.getElementById('lastOrderPrice').innerText = price.toFixed(2);
-        document.getElementById('referralButton').style.display = "inline-block"; 
-        // Removed success alert popup.
-        orderInput.value = '';
+        document.getElementById('referralButton').style.display = "inline-block";
+        showNotification(`Order #${order.id} added successfully!`);
+        orderInput.value = "";
         orderInput.removeAttribute("data-price");
         fetchOrders();
       } catch (error) {
         console.error(error.message);
+        showNotification("Error adding order!", "error");
       }
     }
     
-    // Fetch orders and display them. Only admins see delete buttons.
     async function fetchOrders() {
       try {
         let response = await fetch(`${backendURL}/orders`);
         let orders = await response.json();
     
         let orderList = document.getElementById('orderList');
-        orderList.innerHTML = orders.map(order =>
-          `<li id="order-${order.id}">#${order.id} - ${order.item} (£${order.price.toFixed(2)}) 
-          ${ isAdmin ? `<button onclick="deleteOrder(${order.id}, ${order.price})">❌</button>` : '' }
-          </li>`
-        ).join('');
+        orderList.innerHTML = orders.map(order => `
+          <li id="order-${order.id}">
+            #${order.id} - ${order.item} (£${order.price.toFixed(2)})
+            ${ isAdmin ? `<button onclick="deleteOrder(${order.id}, ${order.price})">❌</button>` : '' }
+          </li>
+        `).join('');
       } catch (err) {
         console.error("Error fetching orders:", err);
       }
     }
     
     async function deleteOrder(id, price) {
-      if(!isAdmin) return;
+      if (!isAdmin) return;
       await fetch(`${backendURL}/orders/${id}`, { method: "DELETE" });
-      // Smoothly fade out the deleted order.
       let orderElem = document.getElementById(`order-${id}`);
       orderElem.style.opacity = "0";
       setTimeout(() => fetchOrders(), 300);
+      showNotification(`Order #${id} deleted successfully!`);
     }
     
-    // Apply a 10% discount to the last order price without showing any popup.
     function applyReferral() {
       let lastOrderPriceElement = document.getElementById('lastOrderPrice');
       let price = parseFloat(lastOrderPriceElement.innerText) || 0;
@@ -295,6 +386,7 @@
       price = price - discount;
       lastOrderPriceElement.innerText = price.toFixed(2);
       document.getElementById('referralButton').style.display = "none";
+      showNotification("10% discount applied!");
     }
     
     window.onload = fetchOrders;
