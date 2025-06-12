@@ -1066,13 +1066,29 @@
         showNotification("Failed to load orders.", "error");
       }
     }
-
-    async function deleteOrder(id, price) {
-    
+ 
+      async function deleteOrder(id, price) {Add commentMore actions
+      if (!isAdmin) return;
+      
+      if (!confirm(`Are you sure you want to delete Order #${id}?`)) {
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${backendURL}/orders/${id}`, { 
+          method: "DELETE" 
+        });
+        
+        if (!response.ok) {
+          throw new Error("Failed to delete order");
+        }
+        
         const orderElement = document.getElementById(`order-${id}`);
         if (orderElement) {
           orderElement.style.transform = 'translateX(100%)';
           orderElement.style.opacity = '0';
+
+           showNotification(`🗑️ Order #${id} deleted successfully!`);
           
           setTimeout(async () => {
             await fetchOrders();
