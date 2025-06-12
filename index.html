@@ -157,8 +157,8 @@
     }
     
     // Dummy admin credentials.
-    const ADMIN_USERNAME = "londonwestend";
-    const ADMIN_PASSWORD = "greybum";
+    const ADMIN_USERNAME = "admin";
+    const ADMIN_PASSWORD = "admin123";
     
     function adminLogin() {
       const username = document.getElementById('adminUsername').value;
@@ -169,7 +169,7 @@
         document.getElementById('adminSection').style.display = "block";
         document.getElementById('adminLoginForm').style.display = "none";
         document.getElementById('adminLoginButton').style.display = "none";
-        alert("Admin logged in successfully!");
+        alert("Admin logged in successfully!"); // (Optional alert retained for login)
       } else {
         alert("Invalid credentials!");
       }
@@ -222,10 +222,10 @@
       }
     }
     
-    // Add an order (only when admin is logged in); orders are posted to the backend.
+    // Add an order (only when admin is logged in). No popup on success or failure.
     async function addOrder() {
       if(!isAdmin) {
-        alert("Admin login required to add orders.");
+        console.error("Admin login required to add orders.");
         return;
       }
       let orderInput = document.getElementById('orderInput');
@@ -237,7 +237,6 @@
       }
     
       let order = { id: orderCounter++, item: orderInput.value, price };
-    
       localStorage.setItem('orderCounter', orderCounter);
     
       try {
@@ -253,12 +252,12 @@
     
         document.getElementById('lastOrderPrice').innerText = price.toFixed(2);
         document.getElementById('referralButton').style.display = "inline-block"; 
-        alert(`Order #${order.id} added successfully!`);
+        // Removed success alert popup.
         orderInput.value = '';
         orderInput.removeAttribute("data-price");
         fetchOrders();
       } catch (error) {
-        alert(error.message);
+        console.error(error.message);
       }
     }
     
@@ -288,14 +287,14 @@
       setTimeout(() => fetchOrders(), 300);
     }
     
+    // Apply a 10% discount to the last order price without showing any popup.
     function applyReferral() {
       let lastOrderPriceElement = document.getElementById('lastOrderPrice');
-      let lastOrderPrice = parseFloat(lastOrderPriceElement.innerText) || 0;
-    
-      lastOrderPrice *= 0.9;
-      lastOrderPriceElement.innerText = lastOrderPrice.toFixed(2);
-      document.getElementById('referralButton').style.display = "none";  
-      alert("Referral code applied! 10% discount added.");
+      let price = parseFloat(lastOrderPriceElement.innerText) || 0;
+      let discount = price * 0.1;
+      price = price - discount;
+      lastOrderPriceElement.innerText = price.toFixed(2);
+      document.getElementById('referralButton').style.display = "none";
     }
     
     window.onload = fetchOrders;
