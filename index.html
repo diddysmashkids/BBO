@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,10 +69,18 @@
       margin-bottom: 32px;
     }
 
-    .login-header img {
+    .login-header .logo-placeholder {
       width: 80px;
       height: 80px;
-      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      color: white;
+      font-weight: 700;
+      font-size: 24px;
     }
 
     .login-header h1 {
@@ -141,6 +148,12 @@
       transform: translateY(0);
     }
 
+    .btn-primary:disabled {
+      background: var(--gray-400);
+      cursor: not-allowed;
+      transform: none;
+    }
+
     /* Dashboard Container */
     .dashboard-container {
       display: none;
@@ -185,6 +198,34 @@
     .user-info {
       color: var(--gray-600);
       font-size: 14px;
+    }
+
+    .connection-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success-color);
+    }
+
+    .status-indicator.offline {
+      background: var(--error-color);
+    }
+
+    .status-indicator.reconnecting {
+      background: var(--warning-color);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
 
     .btn-secondary {
@@ -277,6 +318,12 @@
     .btn-add:hover {
       background: #047857;
       transform: translateY(-1px);
+    }
+
+    .btn-add:disabled {
+      background: var(--gray-400);
+      cursor: not-allowed;
+      transform: none;
     }
 
     .section {
@@ -396,7 +443,7 @@
 
     .order-header {
       display: flex;
-      justify-content: between;
+      justify-content: space-between;
       align-items: center;
       margin-bottom: 8px;
     }
@@ -417,6 +464,14 @@
       color: var(--gray-600);
       font-size: 14px;
       line-height: 1.4;
+    }
+
+    .order-meta {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
     }
 
     .summary-card {
@@ -470,6 +525,26 @@
       background: var(--warning-color);
     }
 
+    /* Loading States */
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
     /* Responsive Design */
     @media (max-width: 768px) {
       .main-content {
@@ -503,6 +578,21 @@
       margin-bottom: 16px;
       opacity: 0.5;
     }
+
+    .refresh-button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .refresh-button:hover {
+      background: var(--primary-hover);
+    }
   </style>
 </head>
 <body>
@@ -510,25 +600,21 @@
   <div class="login-container" id="loginScreen">
     <div class="login-card">
       <div class="login-header">
-        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iMTYiIGZpbGw9IiMxMTE4MjciLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+Cjx0ZXh0IHg9IjUiIHk9IjI0IiBmaWxsPSIjRkZGRkZGIiBmb250LWZhbWlseT0iSW50ZXIsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiPkJPUjwvdGV4dD4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyNiIgcj0iNyIgZmlsbD0iI0Q5NzcwNiIvPgo8c3ZnIHg9IjE1IiB5PSIyMSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiB2aWV3Qm94PSIwIDAgMTAgMTAiPgo8cGF0aCBkPSJNMiAyaDZ2MmgtNlYyWk0wIDRoMTB2MkgwVjRaTTIgNmg2djJIMlY2WiIgZmlsbD0iIzE1ODAzRCIvPgo8cGF0aCBkPSJNMiA4aDZ2MkgyVjhaIiBmaWxsPSIjREMyNjI2Ii8+Cjwvc3ZnPgo8Y2lyY2xlIGN4PSI0MCIgY3k9IjI2IiByPSI3IiBmaWxsPSIjRDk3NzA2Ii8+CjxzdmcgeD0iMzUiIHk9IjIxIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCI+CjxwYXRoIGQ9Ik0yIDJoNnYyaC02VjJaTTAgNGgxMHYySDBWNFpNMiA2aDZ2MkgyVjZaIiBmaWxsPSIjMTU4MDNEIi8+CjxwYXRoIGQ9Ik0yIDhoNnYySDJWOFoiIGZpbGw9IiNEQzI2MjYiLz4KPC9zdmc+Cjx0ZXh0IHg9IjgiIHk9IjQ4IiBmaWxsPSIjRkZGRkZGIiBmb250LWZhbWlseT0iSW50ZXIsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI3MDAiPkJVUkdFUlM8L3RleHQ+Cjwvc3ZnPgo8L3N2Zz4K" alt="BoroBurgers Logo">
+        <div class="logo-placeholder">🍔</div>
         <h1>BoroBurgers</h1>
         <p>Order Management System</p>
       </div>
       <form id="loginForm">
         <div class="form-group">
           <label class="form-label" for="username">Username</label>
-          <input type="text" id="username" class="form-input" required autocomplete="username">
+          <input class="form-input" type="text" id="username" name="username" required />
         </div>
         <div class="form-group">
           <label class="form-label" for="password">Password</label>
-          <input type="password" id="password" class="form-input" required autocomplete="current-password">
+          <input class="form-input" type="password" id="password" name="password" required />
         </div>
         <button type="submit" class="btn-primary">Sign In</button>
       </form>
-      <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--gray-200); text-align: center;">
-        <p style="color: var(--gray-500); font-size: 12px; margin-bottom: 8px;">Demo Credentials:</p>
-        <p style="color: var(--gray-600); font-size: 13px;">Username: <strong>admin</strong> | Password: <strong>admin123</strong></p>
-      </div>
     </div>
   </div>
 
@@ -537,444 +623,554 @@
     <header class="header">
       <div class="header-content">
         <div class="logo">
-          <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzExMTgyNyIvPgo8dGV4dCB4PSI1IiB5PSIxNSIgZmlsbD0iI0ZGRkZGRiIgZm9udC1mYW1pbHk9IkludGVyLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNzAwIj5CT1I8L3RleHQ+CjxjaXJjbGUgY3g9IjEzIiBjeT0iMTciIHI9IjQiIGZpbGw9IiNEOTc3MDYiLz4KPHN2ZyB4PSIxMCIgeT0iMTQiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHZpZXdCb3g9IjAgMCA2IDYiPgo8cGF0aCBkPSJNMSAxaDR2MWgtNFYxWk0wIDJoNnYxSDBWMlpNMSAzaDR2MUgxVjNaIiBmaWxsPSIjMTU4MDNEIi8+CjxwYXRoIGQ9Ik0xIDRoNHYxSDF2LTFaTTEgNWg0djFIMXYtMVoiIGZpbGw9IiNEQzI2MjYiLz4KPC9zdmc+CjxjaXJjbGUgY3g9IjI3IiBjeT0iMTciIHI9IjQiIGZpbGw9IiNEOTc3MDYiLz4KPHN2ZyB4PSIyNCIgeT0iMTQiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHZpZXdCb3g9IjAgMCA2IDYiPgo8cGF0aCBkPSJNMSAxaDR2MWgtNFYxWk0wIDJoNnYxSDBWMlpNMSAzaDR2MUgxVjNaIiBmaWxsPSIjMTU4MDNEIi8+CjxwYXRoIGQ9Ik0xIDRoNHYxSDF2LTFaTTEgNWg0djFIMXYtMVoiIGZpbGw9IiNEQzI2MjYiLz4KPC9zdmc+Cjx0ZXh0IHg9IjUiIHk9IjMwIiBmaWxsPSIjRkZGRkZGIiBmb250LWZhbWlseT0iSW50ZXIsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI3MDAiPkJVUkdFUlM8L3RleHQ+Cjwvc3ZnPgo=" alt="BoroBurgers Logo" style="width: 40px; height: 40px; margin-right: 8px;">
+          <div class="logo-placeholder" style="width: 40px; height: 40px; font-size: 16px;">🍔</div>
           <h1>BoroBurgers</h1>
         </div>
         <div class="user-menu">
-          <span class="user-info">Welcome, <strong id="currentUser">Admin</strong></span>
-          <button class="btn-secondary" onclick="logout()">Sign Out</button>
+          <div class="connection-status">
+            <div class="status-indicator" id="connectionStatus"></div>
+            <span id="connectionText">Online</span>
+          </div>
+          <div class="user-info">Welcome, <span id="currentUser">Admin</span></div>
+          <button class="btn-secondary" onclick="logout()">Logout</button>
         </div>
       </div>
     </header>
 
     <main class="main-content">
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">New Order</h2>
-        </div>
-        <div class="card-content">
-          <div class="order-input-section">
-            <div class="input-group">
-              <input type="text" id="orderInput" class="order-input" placeholder="Enter order details...">
-              <button class="btn-add" onclick="addOrder()">Add Order</button>
+      <div class="order-builder">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Order Builder</h2>
+          </div>
+          <div class="card-content">
+            <div class="order-input-section">
+              <div class="input-group">
+                <input class="order-input" type="text" id="customerName" placeholder="Customer Name" />
+                <input class="order-input" type="tel" id="customerPhone" placeholder="Phone Number" />
+              </div>
+              <div class="input-group">
+                <input class="order-input" type="text" id="orderNotes" placeholder="Special Instructions (Optional)" />
+                <button class="btn-add" onclick="addOrder()">Add Order</button>
+              </div>
             </div>
+
+            <div class="section">
+              <h3 class="section-title">🍔 Burgers</h3>
+              <div class="button-grid" id="burgerOptions"></div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">🍟 Sides</h3>
+              <div class="button-grid" id="sideOptions"></div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">🥤 Drinks</h3>
+              <div class="button-grid" id="drinkOptions"></div>
+            </div>
+
             <div class="price-display">
               <div class="current-price">Current Order Total</div>
-              <div class="price-amount">£<span id="currentPrice">0.00</span></div>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">🔥 Popular Items</h3>
-            <div class="button-grid">
-              <button class="btn-option" onclick="autofill('The Classic', 5.99)">The Classic<br><strong>£5.99</strong></button>
-              <button class="btn-option" onclick="autofill('The Serbian Burger', 6.49)">The Serbian Burger<br><strong>£6.49</strong></button>
-              <button class="btn-option" onclick="autofill('The BigMak', 7.99)">The BigMak<br><strong>£7.99</strong></button>
-              <button class="btn-option" onclick="addMeal()">Add Meal 🍟🥤<br><strong>£2.99</strong></button>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">➕ Add-ons</h3>
-            <div class="button-grid">
-              <button class="btn-option" onclick="autofill('Extra Lettuce', 0.75)">Extra Lettuce<br><strong>£0.75</strong></button>
-              <button class="btn-option" onclick="autofill('Extra Tomatoes', 0.75)">Extra Tomatoes<br><strong>£0.75</strong></button>
-              <button class="btn-option" onclick="autofill('Extra Caramelized Onions', 1.00)">Extra Onions<br><strong>£1.00</strong></button>
-              <button class="btn-option" onclick="autofill('Extra Mayo', 0.50)">Extra Mayo<br><strong>£0.50</strong></button>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">➖ Remove Items</h3>
-            <div class="button-grid">
-              <button class="btn-option" onclick="autofillCustom('No Lettuce')">No Lettuce</button>
-              <button class="btn-option" onclick="autofillCustom('No Tomatoes')">No Tomatoes</button>
-              <button class="btn-option" onclick="autofillCustom('No Onions')">No Onions</button>
-              <button class="btn-option" onclick="autofillCustom('No Mayo')">No Mayo</button>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">🎯 Discounts</h3>
-            <div class="button-grid">
-              <button class="btn-option" onclick="applyReferral()">Referral Code<br><strong>10% Off</strong></button>
-              <button class="btn-option" onclick="applyFamilyDiscount()">Friends & Family<br><strong>5% Off</strong></button>
+              <div class="price-amount" id="currentOrderPrice">£0.00</div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">Recent Orders</h2>
-        </div>
-        <div class="card-content">
-          <ul class="orders-list" id="ordersList">
-            <div class="empty-state">
-              <svg fill="currentColor" viewBox="0 0 24 24">
-                <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z"/>
-              </svg>
-              <p>No orders yet</p>
-              <p style="font-size: 12px; margin-top: 4px;">Start by adding your first order above</p>
-            </div>
-          </ul>
-          <div class="summary-card" id="summaryCard" style="display: none;">
-            <div class="summary-title">Last Order Total</div>
-            <div class="summary-price">£<span id="lastOrderPrice">0.00</span></div>
+      <div class="order-management">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Active Orders <button class="refresh-button" onclick="refreshOrders()">↻</button></h2>
           </div>
+          <div class="card-content">
+            <ul class="orders-list" id="ordersList">
+              <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z"/>
+                </svg>
+                <p>No active orders yet</p>
+              </div>
+            </ul>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-title">Total Revenue Today</div>
+          <div class="summary-price" id="totalRevenue">£0.00</div>
         </div>
       </div>
     </main>
   </div>
 
-  <!-- Toast Container -->
-  <div id="toastContainer"></div>
-
   <script>
-    // Authentication state
-    let isAuthenticated = false;
-    let currentUser = null;
+    // Application State
+    let currentOrder = [];
+    let orders = [];
     let orderCounter = 1;
+    let totalRevenue = 0;
+    let isLoggedIn = false;
 
-    // Check authentication on page load
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('DOM loaded, setting up application...');
-      checkAuthState();
+    // Menu Items with prices
+    const menuItems = {
+      burgers: [
+        { name: 'Classic Burger', price: 8.50 },
+        { name: 'Cheeseburger', price: 9.00 },
+        { name: 'BBQ Bacon Burger', price: 10.50 },
+        { name: 'Chicken Burger', price: 9.50 },
+        { name: 'Veggie Burger', price: 8.00 },
+        { name: 'Double Cheese', price: 11.00 }
+      ],
+      sides: [
+        { name: 'Regular Fries', price: 3.50 },
+        { name: 'Large Fries', price: 4.50 },
+        { name: 'Sweet Potato Fries', price: 4.00 },
+        { name: 'Onion Rings', price: 4.50 },
+        { name: 'Chicken Nuggets', price: 5.50 },
+        { name: 'Mozzarella Sticks', price: 5.00 }
+      ],
+      drinks: [
+        { name: 'Coca-Cola', price: 2.50 },
+        { name: 'Sprite', price: 2.50 },
+        { name: 'Orange Juice', price: 3.00 },
+        { name: 'Water', price: 1.50 },
+        { name: 'Milkshake', price: 4.50 },
+        { name: 'Coffee', price: 2.00 }
+      ]
+    };
+
+    // Initialize the application
+    function init() {
+      renderMenuItems();
       setupEventListeners();
-      
-      // Initialize session timeout if already authenticated
-      if (isAuthenticated) {
-        resetSessionTimeout();
-      }
-    });
-
-    function checkAuthState() {
-      const authData = sessionStorage.getItem('boroburgers_auth');
-      if (authData) {
-        try {
-          const auth = JSON.parse(authData);
-          if (auth.isAuthenticated && auth.user) {
-            isAuthenticated = true;
-            currentUser = auth.user;
-            showDashboard();
-            return;
-          }
-        } catch (e) {
-          sessionStorage.removeItem('boroburgers_auth');
-        }
-      }
-      showLogin();
+      updateUI();
     }
 
+    // Setup event listeners
     function setupEventListeners() {
-      const loginForm = document.getElementById('loginForm');
-      const orderInput = document.getElementById('orderInput');
+      document.getElementById('loginForm').addEventListener('submit', handleLogin);
       
-      if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-      }
-      
-      if (orderInput) {
-        orderInput.addEventListener('input', updateCurrentPrice);
-      }
-      
-      // Add Enter key support for order input
-      if (orderInput) {
-        orderInput.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            addOrder();
-          }
-        });
-      }
+      // Simulate connection status changes
+      setInterval(() => {
+        const status = Math.random() > 0.95 ? 'offline' : 'online';
+        updateConnectionStatus(status);
+      }, 5000);
     }
 
+    // Handle login
     function handleLogin(e) {
       e.preventDefault();
-      
-      const username = document.getElementById('username').value.trim();
+      const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
-
-      // Add loading state to button
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = 'Signing In...';
-      submitBtn.disabled = true;
-
-      // Simple authentication (in production, this would be server-side)
-      const validCredentials = [
-        { username: 'admin', password: 'admin123', name: 'Administrator' },
-        { username: 'manager', password: 'manager123', name: 'Manager' },
-        { username: 'staff', password: 'staff123', name: 'Staff Member' }
-      ];
-
-      // Simulate a small delay for better UX
-      setTimeout(() => {
-        const user = validCredentials.find(cred => 
-          cred.username === username && cred.password === password
-        );
-
-        if (user) {
-          isAuthenticated = true;
-          currentUser = user;
-          
-          // Store auth state
-          sessionStorage.setItem('boroburgers_auth', JSON.stringify({
-            isAuthenticated: true,
-            user: user,
-            loginTime: new Date().toISOString()
-          }));
-
-          showToast('Login successful! Welcome back.', 'success');
-          setTimeout(() => showDashboard(), 500);
-        } else {
-          showToast('Invalid credentials. Please try again.', 'error');
-          // Clear password field
-          document.getElementById('password').value = '';
-          document.getElementById('password').focus();
-        }
-
-        // Reset button state
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-      }, 300);
+      
+      // Simple authentication (in real app, this would be server-side)
+      if (username && password) {
+        isLoggedIn = true;
+        document.getElementById('currentUser').textContent = username;
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        showToast('Welcome to BoroBurgers!', 'success');
+      } else {
+        showToast('Please enter username and password', 'error');
+      }
     }
 
-    function showLogin() {
+    // Logout function
+    function logout() {
+      isLoggedIn = false;
       document.getElementById('loginScreen').style.display = 'flex';
       document.getElementById('dashboard').style.display = 'none';
-      document.getElementById('username').focus();
-    }
-
-    function showDashboard() {
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
-      document.getElementById('currentUser').textContent = currentUser.name;
-      document.getElementById('orderInput').focus();
-    }
-
-    function logout() {
-      isAuthenticated = false;
-      currentUser = null;
-      sessionStorage.removeItem('boroburgers_auth');
-      
-      // Clear order data
-      document.getElementById('orderInput').value = '';
-      document.getElementById('orderInput').removeAttribute('data-price');
-      document.getElementById('currentPrice').textContent = '0.00';
-      document.getElementById('ordersList').innerHTML = `
-        <div class="empty-state">
-          <svg fill="currentColor" viewBox="0 0 24 24">
-            <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z"/>
-          </svg>
-          <p>No orders yet</p>
-          <p style="font-size: 12px; margin-top: 4px;">Start by adding your first order above</p>
-        </div>
-      `;
-      document.getElementById('summaryCard').style.display = 'none';
-      orderCounter = 1; // Reset order counter
-      
+      document.getElementById('loginForm').reset();
       showToast('Logged out successfully', 'success');
-      setTimeout(() => showLogin(), 500);
     }
 
+    // Render menu items
+    function renderMenuItems() {
+      Object.keys(menuItems).forEach(category => {
+        const container = document.getElementById(category.slice(0, -1) + 'Options');
+        if (container) {
+          container.innerHTML = menuItems[category].map(item => 
+            `<button class="btn-option" onclick="addToCurrentOrder('${item.name}', ${item.price})">
+              ${item.name} - £${item.price.toFixed(2)}
+            </button>`
+          ).join('');
+        }
+      });
+    }
+
+    // Add item to current order
+    function addToCurrentOrder(itemName, price) {
+      currentOrder.push({ name: itemName, price: price });
+      updateCurrentOrderPrice();
+      showToast(`Added ${itemName} to order`, 'success');
+    }
+
+    // Update current order price display
+    function updateCurrentOrderPrice() {
+      const total = currentOrder.reduce((sum, item) => sum + item.price, 0);
+      document.getElementById('currentOrderPrice').textContent = `£${total.toFixed(2)}`;
+    }
+
+    // Add order to the system
+    function addOrder() {
+      const customerName = document.getElementById('customerName').value;
+      const customerPhone = document.getElementById('customerPhone').value;
+      const orderNotes = document.getElementById('orderNotes').value;
+
+      if (!customerName || currentOrder.length === 0) {
+        showToast('Please enter customer name and add items to order', 'error');
+        return;
+      }
+
+      const order = {
+        id: orderCounter++,
+        customerName,
+        customerPhone,
+        items: [...currentOrder],
+        notes: orderNotes,
+        total: currentOrder.reduce((sum, item) => sum + item.price, 0),
+        timestamp: new Date(),
+        status: 'active'
+      };
+
+      orders.push(order);
+      totalRevenue += order.total;
+      
+      // Clear current order
+      currentOrder = [];
+      document.getElementById('customerName').value = '';
+      document.getElementById('customerPhone').value = '';
+      document.getElementById('orderNotes').value = '';
+      
+      updateCurrentOrderPrice();
+      renderOrders();
+      updateTotalRevenue();
+      showToast(`Order #${order.id} added successfully!`, 'success');
+    }
+
+    // Render orders list
+    function renderOrders() {
+      const ordersList = document.getElementById('ordersList');
+      
+      if (orders.length === 0) {
+        ordersList.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z"/>
+            </svg>
+            <p>No active orders yet</p>
+          </div>
+        `;
+        return;
+      }
+
+      ordersList.innerHTML = orders.map(order => `
+        <li class="order-item">
+          <div class="order-actions">
+            <button class="btn-delete" onclick="deleteOrder(${order.id})" title="Delete Order">✕</button>
+          </div>
+          <div class="order-header">
+            <span class="order-id">Order #${order.id}</span>
+            <span class="order-price">£${order.total.toFixed(2)}</span>
+          </div>
+          <div class="order-details">
+            <strong>${order.customerName}</strong>
+            ${order.customerPhone ? ` • ${order.customerPhone}` : ''}
+            <br>
+            ${order.items.map(item => item.name).join(', ')}
+            ${order.notes ? `<br><em>Notes: ${order.notes}</em>` : ''}
+          </div>
+          <div class="order-meta">
+            <span>${order.timestamp.toLocaleTimeString()}</span>
+            <span>${order.items.length} items</span>
+          </div>
+        </li>
+      `).join('');
+    }
+
+    // Delete order
+    function deleteOrder(orderId) {
+      const orderIndex = orders.findIndex(order => order.id === orderId);
+      if (orderIndex !== -1) {
+        const order = orders[orderIndex];
+        totalRevenue -= order.total;
+        orders.splice(orderIndex, 1);
+        renderOrders();
+        updateTotalRevenue();
+        showToast(`Order #${orderId} deleted`, 'warning');
+      }
+    }
+
+    // Update total revenue display
+    function updateTotalRevenue() {
+      document.getElementById('totalRevenue').textContent = `£${totalRevenue.toFixed(2)}`;
+    }
+
+    // Refresh orders (simulate data refresh)
+    function refreshOrders() {
+      const refreshBtn = document.querySelector('.refresh-button');
+      refreshBtn.innerHTML = '<div class="spinner"></div>';
+      refreshBtn.disabled = true;
+      
+      setTimeout(() => {
+        renderOrders();
+        refreshBtn.innerHTML = '↻';
+        refreshBtn.disabled = false;
+        showToast('Orders refreshed', 'success');
+      }, 1000);
+    }
+
+    // Connection status management
+    function updateConnectionStatus(status) {
+      const indicator = document.getElementById('connectionStatus');
+      const text = document.getElementById('connectionText');
+      
+      indicator.className = 'status-indicator';
+      
+      switch(status) {
+        case 'online':
+          indicator.classList.add('online');
+          text.textContent = 'Online';
+          break;
+        case 'offline':
+          indicator.classList.add('offline');
+          text.textContent = 'Offline';
+          break;
+        case 'reconnecting':
+          indicator.classList.add('reconnecting');
+          text.textContent = 'Reconnecting...';
+          break;
+      }
+    }
+
+    // Toast notification system
     function showToast(message, type = 'success') {
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
       toast.textContent = message;
+      document.body.appendChild(toast);
       
-      document.getElementById('toastContainer').appendChild(toast);
-      
+      // Trigger animation
       setTimeout(() => toast.classList.add('show'), 100);
+      
+      // Remove toast
       setTimeout(() => {
         toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
+        setTimeout(() => document.body.removeChild(toast), 300);
       }, 3000);
     }
 
-    function updateCurrentPrice() {
-      const input = document.getElementById('orderInput');
-      const price = parseFloat(input.getAttribute('data-price') || '0');
-      document.getElementById('currentPrice').textContent = price.toFixed(2);
+    // Update UI elements
+    function updateUI() {
+      updateCurrentOrderPrice();
+      renderOrders();
+      updateTotalRevenue();
     }
 
-    function autofill(item, price) {
-      if (!isAuthenticated) return;
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (!isLoggedIn) return;
       
-      const input = document.getElementById('orderInput');
-      const currentPrice = parseFloat(input.getAttribute('data-price') || '0');
-      
-      if (input.value.trim()) {
-        input.value += ' + ' + item;
-        input.setAttribute('data-price', (currentPrice + price).toFixed(2));
-      } else {
-        input.value = item;
-        input.setAttribute('data-price', price.toFixed(2));
+      // Ctrl/Cmd + N for new order
+      if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+        e.preventDefault();
+        document.getElementById('customerName').focus();
       }
       
-      updateCurrentPrice();
-      showToast(`Added: ${item} (£${price.toFixed(2)})`, 'success');
-    }
-
-    function autofillCustom(item) {
-      if (!isAuthenticated) return;
-      
-      const input = document.getElementById('orderInput');
-      if (input.value.trim()) {
-        input.value += ' + ' + item;
-      } else {
-        input.value = item;
+      // Ctrl/Cmd + Enter to add order
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        addOrder();
       }
       
-      showToast(`Added: ${item}`, 'success');
+      // Escape to clear current order
+      if (e.key === 'Escape') {
+        currentOrder = [];
+        updateCurrentOrderPrice();
+        showToast('Current order cleared', 'warning');
+      }
+    });
+
+    // Auto-save functionality (simulate saving to server)
+    function autoSave() {
+      if (orders.length > 0) {
+        // In a real application, this would save to a server
+        console.log('Auto-saving orders...', orders);
+      }
     }
 
-    function addMeal() {
-      if (!isAuthenticated) return;
+    // Auto-save every 30 seconds
+    setInterval(autoSave, 30000);
+
+    // Load saved data on page load (simulate loading from server)
+    function loadSavedData() {
+      // In a real application, this would load from a server
+      // For demo purposes, we'll start with some sample data
+      const sampleOrders = [
+        {
+          id: 1,
+          customerName: 'John Smith',
+          customerPhone: '07123456789',
+          items: [
+            { name: 'Classic Burger', price: 8.50 },
+            { name: 'Regular Fries', price: 3.50 },
+            { name: 'Coca-Cola', price: 2.50 }
+          ],
+          notes: 'No onions please',
+          total: 14.50,
+          timestamp: new Date(Date.now() - 1000000),
+          status: 'active'
+        },
+        {
+          id: 2,
+          customerName: 'Sarah Johnson',
+          customerPhone: '07987654321',
+          items: [
+            { name: 'Veggie Burger', price: 8.00 },
+            { name: 'Sweet Potato Fries', price: 4.00 }
+          ],
+          notes: '',
+          total: 12.00,
+          timestamp: new Date(Date.now() - 500000),
+          status: 'active'
+        }
+      ];
       
-      const input = document.getElementById('orderInput');
-      if (!input.value.trim()) {
-        showToast('Please add a main item before adding a meal', 'warning');
+      // Uncomment the lines below to start with sample data
+      // orders = sampleOrders;
+      // orderCounter = 3;
+      // totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+    }
+
+    // Print functionality for orders
+    function printOrder(orderId) {
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
+      
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Order #${order.id} - BoroBurgers</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 20px; }
+              .header { text-align: center; margin-bottom: 20px; }
+              .order-details { margin-bottom: 20px; }
+              .items { margin-bottom: 20px; }
+              .total { font-weight: bold; font-size: 18px; }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h1>🍔 BoroBurgers</h1>
+              <h2>Order #${order.id}</h2>
+            </div>
+            <div class="order-details">
+              <p><strong>Customer:</strong> ${order.customerName}</p>
+              ${order.customerPhone ? `<p><strong>Phone:</strong> ${order.customerPhone}</p>` : ''}
+              <p><strong>Time:</strong> ${order.timestamp.toLocaleString()}</p>
+              ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ''}
+            </div>
+            <div class="items">
+              <h3>Items:</h3>
+              <ul>
+                ${order.items.map(item => `<li>${item.name} - £${item.price.toFixed(2)}</li>`).join('')}
+              </ul>
+            </div>
+            <div class="total">
+              <p>Total: £${order.total.toFixed(2)}</p>
+            </div>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+
+    // Search functionality
+    function searchOrders(query) {
+      if (!query) {
+        renderOrders();
         return;
       }
       
-      const currentPrice = parseFloat(input.getAttribute('data-price') || '0');
-      input.value += ' + Meal 🍟🥤';
-      input.setAttribute('data-price', (currentPrice + 2.99).toFixed(2));
-      updateCurrentPrice();
-      showToast('Added: Meal Deal (£2.99)', 'success');
+      const filteredOrders = orders.filter(order => 
+        order.customerName.toLowerCase().includes(query.toLowerCase()) ||
+        order.customerPhone.includes(query) ||
+        order.id.toString().includes(query)
+      );
+      
+      // Temporarily update orders for rendering
+      const originalOrders = [...orders];
+      orders = filteredOrders;
+      renderOrders();
+      orders = originalOrders;
     }
 
-    function addOrder() {
-      if (!isAuthenticated) return;
-      
-      const orderInput = document.getElementById('orderInput');
-      const orderText = orderInput.value.trim();
-      const price = parseFloat(orderInput.getAttribute('data-price') || '0');
-      
-      if (!orderText) {
-        showToast('Please enter order details', 'error');
-        return;
-      }
-
-      // Create order object
-      const order = {
-        id: orderCounter++,
-        text: orderText,
-        price: price,
-        timestamp: new Date()
+    // Export data functionality
+    function exportData() {
+      const data = {
+        orders: orders,
+        totalRevenue: totalRevenue,
+        exportDate: new Date().toISOString()
       };
-
-      // Add to orders list
-      addOrderToList(order);
       
-      // Update summary
-      document.getElementById('lastOrderPrice').textContent = price.toFixed(2);
-      document.getElementById('summaryCard').style.display = 'block';
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `boroburgers-orders-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
       
-      // Clear input
-      orderInput.value = '';
-      orderInput.removeAttribute('data-price');
-      updateCurrentPrice();
-      
-      showToast(`Order #${order.id} added successfully! (£${price.toFixed(2)})`, 'success');
+      showToast('Order data exported successfully', 'success');
     }
 
-    function addOrderToList(order) {
-      const ordersList = document.getElementById('ordersList');
-      
-      // Remove empty state if it exists
-      const emptyState = ordersList.querySelector('.empty-state');
-      if (emptyState) {
-        emptyState.remove();
+    // Initialize the application when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSavedData();
+      init();
+    });
+
+    // Handle page visibility changes
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && isLoggedIn) {
+        // Refresh data when page becomes visible
+        refreshOrders();
       }
+    });
 
-      const orderItem = document.createElement('li');
-      orderItem.className = 'order-item';
-      orderItem.setAttribute('data-order-id', order.id);
-      orderItem.innerHTML = `
-        <div class="order-actions">
-          <button class="btn-delete" onclick="deleteOrder(${order.id})" title="Delete Order">
-            ×
-          </button>
-        </div>
-        <div class="order-header">
-          <span class="order-id">#${order.id}</span>
-          <span class="order-price">£${order.price.toFixed(2)}</span>
-        </div>
-        <div class="order-details">${order.text}</div>
-        <div style="font-size: 12px; color: var(--gray-400); margin-top: 8px;">
-          ${order.timestamp.toLocaleTimeString()}
-        </div>
-      `;
-      
-      ordersList.insertBefore(orderItem, ordersList.firstChild);
+    // Service Worker registration for offline support (optional)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('SW registered: ', registration);
+          })
+          .catch(registrationError => {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
     }
 
-    function applyReferral() {
-      if (!isAuthenticated) return;
-      
-      const input = document.getElementById('orderInput');
-      if (!input.value.trim()) {
-        showToast('Please add items before applying discount', 'warning');
-        return;
-      }
-      
-      let currentPrice = parseFloat(input.getAttribute('data-price') || '0');
-      if (currentPrice <= 0) {
-        showToast('No valid price to discount', 'error');
-        return;
-      }
-      
-      const discount = currentPrice * 0.10;
-      const newPrice = currentPrice - discount;
-      input.value += ' + Referral Code (10% Off)';
-      input.setAttribute('data-price', newPrice.toFixed(2));
-      updateCurrentPrice();
-      showToast(`10% discount applied! Saved £${discount.toFixed(2)}`, 'success');
-    }
+    // Handle online/offline events
+    window.addEventListener('online', () => {
+      updateConnectionStatus('online');
+      showToast('Connection restored', 'success');
+    });
 
-    function applyFamilyDiscount() {
-      if (!isAuthenticated) return;
-      
-      const input = document.getElementById('orderInput');
-      if (!input.value.trim()) {
-        showToast('Please add items before applying discount', 'warning');
-        return;
-      }
-      
-      let currentPrice = parseFloat(input.getAttribute('data-price') || '0');
-      if (currentPrice <= 0) {
-        showToast('No valid price to discount', 'error');
-        return;
-      }
-      
-      const discount = currentPrice * 0.05;
-      const newPrice = currentPrice - discount;
-      input.value += ' + Friends & Family (5% Off)';
-      input.setAttribute('data-price', newPrice.toFixed(2));
-      updateCurrentPrice();
-      showToast(`5% discount applied! Saved £${discount.toFixed(2)}`, 'success');
-    }
+    window.addEventListener('offline', () => {
+      updateConnectionStatus('offline');
+      showToast('Connection lost - working offline', 'warning');
+    });
 
-    // Session timeout (30 minutes)
-    let sessionTimeout;
-    
-    function resetSessionTimeout() {
-      if (sessionTimeout) clearTimeout(sessionTimeout);
-      sessionTimeout = setTimeout(() => {
-        showToast('Session expired. Please log in again.', 'warning');
-        setTimeout(logout, 2000);
-      }, 30 * 60 * 1000); // 30 minutes
-    }
-    
-    // Reset timeout on user activity
-    document.addEventListener('click', resetSessionTimeout);
-    document.addEventListener('keypress', resetSessionTimeout);
-    
-    // Initialize session timeout when authenticated
-    if (isAuthenticated) {
-      resetSessionTimeout();
-    }
+    // Cleanup function
+    window.addEventListener('beforeunload', () => {
+      autoSave();
+    });
+
   </script>
 </body>
 </html>
