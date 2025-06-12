@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>BoroBurgers Orders - Dashboard</title>
   <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     /* Global Styles */
     body {
@@ -25,7 +25,7 @@
       width: 100%;
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
       padding: 30px;
       margin-bottom: 20px;
     }
@@ -46,7 +46,7 @@
       background-color: #007bff;
       color: #fff;
       border: none;
-      box-shadow: 0 4px 8px rgba(0,123,255,0.4);
+      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
     }
     button:hover {
       background-color: #0056b3;
@@ -78,6 +78,32 @@
       text-align: center;
       margin-top: 20px;
     }
+    /* Modal (Login) Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;  /* Hidden by default */
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 8px;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .modal input {
+      width: 100%;
+      margin-top: 10px;
+    }
     /* Notification Styling */
     #notification {
       position: fixed;
@@ -100,14 +126,13 @@
   <div class="container">
     <h2>🍔 BoroBurgers Order Management 🍟🥤</h2>
     
-    <!-- Login Button (toggle functionality) -->
-    <button id="adminLoginButton" onclick="toggleAdmin()">Admin Dashboard</button>
-    
-    <!-- Admin Dashboard, initially hidden -->
+    <!-- Admin Dashboard -->
+    <!-- Initially hidden until the user logs in -->
     <div class="section" id="adminSection" style="display: none;">
       <h3>Admin Dashboard</h3>
+      <button onclick="logout()">Logout</button>
       <!-- Order Input Area -->
-      <input type="text" id="orderInput" placeholder="Enter order details">
+      <input type="text" id="orderInput" placeholder="Enter order details" />
       <button onclick="addOrder()">Add Order</button>
       
       <!-- Quick Fill Options -->
@@ -157,22 +182,64 @@
     </div>
   </div>
   
+  <!-- Login Modal -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal">
+      <h3>Admin Login</h3>
+      <form id="loginForm">
+        <input type="text" id="loginUsername" placeholder="Username" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+  
   <!-- Notification -->
   <div id="notification"></div>
   
-  <!-- JavaScript for Order Management and Toggle Function -->
+  <!-- JavaScript for Login and Order Management -->
   <script>
-    // Toggle the admin dashboard when the button is clicked
-    function toggleAdmin() {
-      const adminSection = document.getElementById("adminSection");
-      if (adminSection.style.display === "none" || adminSection.style.display === "") {
-        adminSection.style.display = "block";
+    // Check login state on page load
+    document.addEventListener("DOMContentLoaded", function() {
+      if (sessionStorage.getItem("loggedIn") === "true") {
+        showAdminDashboard();
       } else {
-        adminSection.style.display = "none";
+        // Show login modal if not logged in
+        document.getElementById("loginModal").style.display = "flex";
       }
+    });
+    
+    // Login form submission handling
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      // Dummy credentials: username: admin, password: admin123
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+      
+      if (username === "admin" && password === "admin123") {
+        sessionStorage.setItem("loggedIn", "true");
+        showNotification("Login successful!");
+        showAdminDashboard();
+      } else {
+        showNotification("Invalid credentials!", "error");
+      }
+    });
+    
+    // Function to show the admin dashboard and hide the login modal
+    function showAdminDashboard() {
+      document.getElementById("adminSection").style.display = "block";
+      document.getElementById("loginModal").style.display = "none";
     }
     
-    // Function to show notifications
+    // Logout function clears session and shows login modal
+    function logout() {
+      sessionStorage.removeItem("loggedIn");
+      document.getElementById("adminSection").style.display = "none";
+      document.getElementById("loginModal").style.display = "flex";
+      showNotification("Logged out successfully.");
+    }
+    
+    // Notification helper
     function showNotification(message, type = "success") {
       const notification = document.getElementById("notification");
       notification.textContent = message;
