@@ -1,0 +1,26 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Redirect non-HTTPS requests to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Prevent directory browsing by disabling indexes
+Options -Indexes
+
+# Add security headers
+
+# Content Security Policy (CSP)
+Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data:; object-src 'none';"
+
+# Enforce HTTPS via HSTS (set max-age to one year, include subdomains, and preload if eligible)
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+# Prevent MIME-type sniffing
+Header set X-Content-Type-Options "nosniff"
+
+# Protect against clickjacking (use DENY or SAMEORIGIN based on your needs)
+Header set X-Frame-Options "DENY"
+
+# Set Referrer Policy (e.g., no referrer information sent)
+Header set Referrer-Policy "no-referrer"
