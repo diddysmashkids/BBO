@@ -689,22 +689,19 @@
             <div class="card">
               <div class="card-header">
                 <h4 class="card-title">
-                  🔥 Menu Items
+                  🔥 Burger Base
                 </h4>
               </div>
               <div class="card-body">
                 <div class="btn-group">
-                  <button class="btn btn-secondary" onclick="autofill('The Classic', 5.99)">
-                    🍔 The Classic (£5.99)
-                  </button>
                   <button class="btn btn-secondary" onclick="autofill('The Serbian Burger', 6.99)">
-                    🇷🇸 The Serbian Burger (£6.99)
+                    The SerbianMak (£7.49)
                   </button>
                   <button class="btn btn-secondary" onclick="autofill('The BigMak', 8.99)">
-                    🍔 The BigMak (£8.99)
+                    The BigMak (£6.49)
                   </button>
                   <button class="btn btn-warning" onclick="addMeal(2.76)">
-                    🍟🥤 Add Meal (+£2.76)
+                    Add Meal (+£2.76)
                   </button>
                 </div>
               </div>
@@ -714,22 +711,22 @@
             <div class="card">
               <div class="card-header">
                 <h4 class="card-title">
-                  🥬 Extra Add-ons
+                  🥬 Toppings
                 </h4>
               </div>
               <div class="card-body">
                 <div class="btn-group">
                   <button class="btn btn-success" onclick="autofill('Extra Lettuce', 0.75)">
-                    🥬 Extra Lettuce (+£0.75)
+                    🥬 Lettuce (+£0.50)
                   </button>
                   <button class="btn btn-success" onclick="autofill('Extra Tomatoes', 0.75)">
-                    🍅 Extra Tomatoes (+£0.75)
+                    🍅 Tomatoes (+£0.50)
                   </button>
                   <button class="btn btn-success" onclick="autofill('Extra Caramelized Onions', 1.00)">
-                    🧅 Extra Caramelized Onions (+£1.00)
+                    🧅 Caramelized Onions (+£0.80)
                   </button>
                   <button class="btn btn-success" onclick="autofill('Extra Mayo', 0.50)">
-                    🥄 Extra Mayo (+£0.50)
+                    🥄 Spicy Mayo Sauce (+£0.60)
                   </button>
                 </div>
               </div>
@@ -1138,7 +1135,7 @@
         return;
       }
       
-      const discountedPrice = price - (price * 0.05);
+      const discountedPrice = price - (price * 0.2);
       priceElement.innerText = discountedPrice.toFixed(2);
       
       // Add visual effect
